@@ -1,12 +1,12 @@
 import java.awt.Color;
-
+import java.awt.Dimension;
 import javax.swing.JPanel;
 
 public class SideBarPanel extends JPanel{
 
     SideBarPanel(){
         this.setBackground(Color.red);
-        this.setBounds(0,0, 250, 500);
+        this.setPreferredSize(new Dimension(200,200));
 
     }
 
