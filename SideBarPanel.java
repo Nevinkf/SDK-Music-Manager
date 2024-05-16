@@ -1,17 +1,19 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class SideBarPanel extends JPanel{
+public class SideBarPanel extends JPanel {
 
     JLabel testLabel;
     GridBagConstraints sideBarConstraints;
 
-    SideBarPanel(){
+    SideBarPanel() {
         this.setBackground(Color.red);
         this.setLayout(new BorderLayout());
 
         sideBarConstraints = new GridBagConstraints();
-        JLabel[] testLabels = {new JLabel("Hello"), new JLabel("C#"), new JLabel("Unity"), new JLabel("GDScript"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart")};
+        JLabel[] testLabels = { new JLabel("Hello"), new JLabel("C#"), new JLabel("Unity"), new JLabel("GDScript"),
+                new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"),
+                new JLabel("Heart") };
 
         testLabel = new JLabel("Test Playlist");
 
@@ -23,7 +25,7 @@ public class SideBarPanel extends JPanel{
         JPanel gridBagPanel = new JPanel();
         gridBagPanel.setLayout(new GridBagLayout());
 
-        for(int i = 0; i < testLabels.length; i++){
+        for (int i = 0; i < testLabels.length; i++) {
             sideBarConstraints.gridx = 0;
             sideBarConstraints.gridy = i;
             sideBarConstraints.gridheight = 1;
@@ -35,7 +37,7 @@ public class SideBarPanel extends JPanel{
             sideBarConstraints.fill = GridBagConstraints.NONE;
             gridBagPanel.add(testLabels[i], sideBarConstraints);
         }
-        
+
         westPanel.add(gridBagPanel, BorderLayout.WEST);
 
         this.add(westPanel, BorderLayout.NORTH);

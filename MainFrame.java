@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame{
-    
+public class MainFrame extends JFrame {
+
     JMenuBar menuBar;
     BorderLayout mainFrameLayout;
 
-    MainFrame(){
+    MainFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
@@ -25,13 +25,14 @@ public class MainFrame extends JFrame{
         this.setJMenuBar(menuBar);
 
         JScrollPane sideBarScrollPane = new JScrollPane();
-        sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);      
+        sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         sideBarScrollPane.setViewportView(new SideBarPanel());
-        
+
         JScrollPane displayScrollPane = new JScrollPane();
         displayScrollPane.setViewportView(new DisplayPanel());
 
-        JSplitPane sideAndDisplaySplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sideBarScrollPane, displayScrollPane);
+        JSplitPane sideAndDisplaySplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sideBarScrollPane,
+                displayScrollPane);
 
         this.add(sideAndDisplaySplitPane, BorderLayout.CENTER);
 

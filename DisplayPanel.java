@@ -1,5 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.FieldKey;
 
 public class DisplayPanel extends JPanel {
 
@@ -11,7 +16,7 @@ public class DisplayPanel extends JPanel {
         this.setLayout(new BorderLayout());
 
         displayPanelConstraints = new GridBagConstraints();
-        JLabel[] songList = {new JLabel("Hello"), new JLabel("C#"), new JLabel("Unity"), new JLabel("GDScript"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart")};
+        List[] songList = {};
 
         // Used to keep components to the left of the side bar
         JPanel westPanel = new JPanel();
@@ -20,6 +25,12 @@ public class DisplayPanel extends JPanel {
         // Used to keep spacing between labels consistent
         JPanel gridBagPanel = new JPanel();
         gridBagPanel.setLayout(new GridBagLayout());
+
+        File songsFolder = new File("/songs");
+        // For song in songs folder, get meta data and put into a list
+        for(File song: songsFolder.listFiles()){
+            // song
+        }
 
         for(int i = 0; i < songList.length; i++){
             displayPanelConstraints.gridx = 0;
