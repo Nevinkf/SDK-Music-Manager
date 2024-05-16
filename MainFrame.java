@@ -24,11 +24,16 @@ public class MainFrame extends JFrame{
 
         this.setJMenuBar(menuBar);
 
-        JScrollPane SideBarScrollPane = new JScrollPane();
-        SideBarScrollPane.setViewportView(new SideBarPanel());
-        this.add(SideBarScrollPane, BorderLayout.WEST);
+        JScrollPane sideBarScrollPane = new JScrollPane();
+        sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);      
+        sideBarScrollPane.setViewportView(new SideBarPanel());
+        
+        JScrollPane displayScrollPane = new JScrollPane();
+        displayScrollPane.setViewportView(new DisplayPanel());
 
-        this.add(new DisplayPanel(), BorderLayout.CENTER);
+        JSplitPane sideAndDisplaySplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sideBarScrollPane, displayScrollPane);
+
+        this.add(sideAndDisplaySplitPane, BorderLayout.CENTER);
 
         this.add(new OptionsPanel(), BorderLayout.NORTH);
 

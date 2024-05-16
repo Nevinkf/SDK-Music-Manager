@@ -15,8 +15,13 @@ public class SideBarPanel extends JPanel{
 
         testLabel = new JLabel("Test Playlist");
 
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new GridBagLayout());
+        // Used to keep components to the left of the side bar
+        JPanel westPanel = new JPanel();
+        westPanel.setLayout(new BorderLayout());
+
+        // Used to keep spacing between labels consistent
+        JPanel gridBagPanel = new JPanel();
+        gridBagPanel.setLayout(new GridBagLayout());
 
         for(int i = 0; i < testLabels.length; i++){
             sideBarConstraints.gridx = 0;
@@ -28,11 +33,12 @@ public class SideBarPanel extends JPanel{
             sideBarConstraints.anchor = GridBagConstraints.WEST;
             sideBarConstraints.insets = new Insets(2, 2, 2, 2);
             sideBarConstraints.fill = GridBagConstraints.NONE;
-            northPanel.add(testLabels[i], sideBarConstraints);
+            gridBagPanel.add(testLabels[i], sideBarConstraints);
         }
         
-        this.add(northPanel, BorderLayout.NORTH);
-        this.setVisible(true);
+        westPanel.add(gridBagPanel, BorderLayout.WEST);
 
+        this.add(westPanel, BorderLayout.NORTH);
+        this.setVisible(true);
     }
 }
