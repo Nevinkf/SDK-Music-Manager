@@ -1,17 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 
 public class DisplayPanel extends JPanel {
 
     JLabel[] songList;
     GridBagConstraints displayPanelConstraints;
 
-    DisplayPanel(){
+    DisplayPanel() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         this.setBackground(Color.blue);
         this.setLayout(new BorderLayout());
 
@@ -26,10 +31,12 @@ public class DisplayPanel extends JPanel {
         JPanel gridBagPanel = new JPanel();
         gridBagPanel.setLayout(new GridBagLayout());
 
-        File songsFolder = new File("/songs");
+        File songsFolder = new File("./songs");
         // For song in songs folder, get meta data and put into a list
         for(File song: songsFolder.listFiles()){
-            // song
+            AudioFile songFile = AudioFileIO.read(song);
+            Tag songTag = songFile.getTag();
+            System.out.println(songTag.getFirst(FieldKey.ARTIST));
         }
 
         for(int i = 0; i < songList.length; i++){

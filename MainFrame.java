@@ -1,12 +1,19 @@
 import javax.swing.*;
+
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+
 import java.awt.*;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
     BorderLayout mainFrameLayout;
 
-    MainFrame() {
+    MainFrame() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
