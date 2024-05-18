@@ -32,8 +32,10 @@ public class DisplayPanel extends JPanel {
         JPanel gridBagPanel = new JPanel();
         gridBagPanel.setLayout(new GridBagLayout());
 
-        File songsFolder = new File("./songs");
+        File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a furture point
         // For song in songs folder, get meta data and put into a list
+
+        //Have each song in the list as its own object , have some variable that keeps the columns same size, 
         for(File song: songsFolder.listFiles()){
             AudioFile songFile = AudioFileIO.read(song);
             Tag songTag = songFile.getTag();
