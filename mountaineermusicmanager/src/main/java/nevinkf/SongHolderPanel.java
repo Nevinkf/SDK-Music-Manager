@@ -100,8 +100,9 @@ public class SongHolderPanel extends JPanel{
         songFileName = newSongFileName;
     }
 
-    public JLabel getSongFileName(){
-        return playsLabel;
+    public String getSongFileName(){
+        return songFileName;
     }
+
 
 }

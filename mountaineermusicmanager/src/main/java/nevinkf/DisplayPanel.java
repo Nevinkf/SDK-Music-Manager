@@ -1,8 +1,14 @@
 package nevinkf;
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -12,14 +18,22 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import javazoom.jl.decoder.JavaLayerException;
+
 public class DisplayPanel extends JPanel {
 
     JPanel columnNamePanel;
+    List<SongHolderPanel> songHolderList;
     GridBagConstraints displayPanelConstraints;
+    MainFrame mainFrameHolder;
+    SongHolderPanel testHolderPanel;
 
-    DisplayPanel() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
+    DisplayPanel(MainFrame mainFrame) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         this.setBackground(Color.blue);
         this.setLayout(new BorderLayout());
+        mainFrameHolder = mainFrame;
+        songHolderList = new ArrayList<SongHolderPanel>();
+
 
         displayPanelConstraints = new GridBagConstraints();
 
@@ -77,9 +91,51 @@ public class DisplayPanel extends JPanel {
             Tag songTag = songFile.getTag();
 
             SongHolderPanel tempSongHolderPanel = new SongHolderPanel();
+            testHolderPanel = tempSongHolderPanel;
+            songHolderList.add(tempSongHolderPanel);
             tempSongHolderPanel.setSongTitleLabel(songTag.getFirst(FieldKey.TITLE));
             tempSongHolderPanel.setArtistLabel(songTag.getFirst(FieldKey.ARTIST));
             tempSongHolderPanel.setAlbumLabel(songTag.getFirst(FieldKey.ALBUM));
+            tempSongHolderPanel.setTrackLabel(songTag.getFirst(FieldKey.TRACK));
+            // tempSongHolderPanel.setTimeLabel(songTag.getValue(FieldKey., ABORT); Figure out later
+            tempSongHolderPanel.setGenreLabel(songTag.getFirst(FieldKey.GENRE));
+            tempSongHolderPanel.setSongFileName(song.getName());
+            tempSongHolderPanel.addMouseListener(new MouseListener() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        mainFrameHolder.playSong("Heaven Pierce Her - ULTRAKILL- INFINITE HYPERDEATH - 01 The Fire Is Gone (for Piano, Saxophone and Trumpet).mp3");
+                    } catch (FileNotFoundException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    } catch (JavaLayerException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // TODO Auto-generated method stub
+                }
+                
+            });
 
             songHolderPanel.add(tempSongHolderPanel);
             songHolderPanel.add(Box.createRigidArea(new Dimension(50,5)));
