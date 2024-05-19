@@ -11,15 +11,13 @@ public class SongHolderPanel extends JPanel{
     JLabel timeLabel;
     JLabel genreLabel;
     JLabel playsLabel;
-    GridBagConstraints songHoldeGridBagConstraints;
+    String songFileName;
 
     SongHolderPanel(){
-        this.setBackground(Color.white);
-        this.setLayout(new GridBagLayout());
-        songHoldeGridBagConstraints = new GridBagConstraints();
-
+        this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         songTitleLabel = new JLabel("Test");
+        songTitleLabel.setPreferredSize(new Dimension(100,10)); // IMPORTANT
         artistLabel = new JLabel("Test");
         albumLabel = new JLabel("Test");
         trackLabel = new JLabel("Test");
@@ -27,51 +25,82 @@ public class SongHolderPanel extends JPanel{
         genreLabel = new JLabel("Test");
         playsLabel = new JLabel("Test");
         
-        songHoldeGridBagConstraints.gridx = 0;
-        songHoldeGridBagConstraints.weightx = 0;
-        songHoldeGridBagConstraints.weighty = 1;
-        songHoldeGridBagConstraints.anchor = GridBagConstraints.WEST;
-        songHoldeGridBagConstraints.insets = new Insets(5, 5, 5, 5);
-        this.add(songTitleLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 1;
-        this.add(artistLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 2;
-        this.add(albumLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 3;
-        this.add(trackLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 4;
-        this.add(timeLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 5;
-        this.add(genreLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 6;
-        this.add(playsLabel, songHoldeGridBagConstraints);
+        this.add(songTitleLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(artistLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(albumLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(trackLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(timeLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(genreLabel);
+        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(playsLabel);
+    }
+
+    public void setSongTitleLabel(String newSongTitle){
+        songTitleLabel.setText(newSongTitle);
     }
 
     public JLabel getSongTitleLabel(){
         return songTitleLabel;
     }
 
+    public void setArtistLabel(String newArtist){
+        artistLabel.setText(newArtist);
+    }
+
     public JLabel getArtistLabel(){
         return artistLabel;
+    }
+
+    public void setAlbumLabel(String newAlbumLabel){
+        albumLabel.setText(newAlbumLabel);
     }
 
     public JLabel getAlbumLabel(){
         return albumLabel;
     }
 
+    public void setTrackLabel(String newTrackLabel){
+        trackLabel.setText(newTrackLabel);
+    }
+
     public JLabel getTrackLabel(){
         return trackLabel;
+    }
+
+    public void setTimeLabel(String newTimeLabel){
+        timeLabel.setText(newTimeLabel);
     }
 
     public JLabel getTimeLabel(){
         return timeLabel;
     }
 
+    public void setGenreLabel(String newGenreLabel){
+        genreLabel.setText(newGenreLabel);
+    }
+
     public JLabel getGenreLabel(){
         return genreLabel;
     }
 
+    public void setPlaysLabel(String newPlaysLabel){
+        playsLabel.setText(newPlaysLabel);
+    }
+
     public JLabel getPlaysLabel(){
+        return playsLabel;
+    }
+
+    public void setSongFileName(String newSongFileName){
+        songFileName = newSongFileName;
+    }
+
+    public JLabel getSongFileName(){
         return playsLabel;
     }
 

@@ -28,42 +28,43 @@ public class DisplayPanel extends JPanel {
         westPanel.setLayout(new BorderLayout());
 
         // Used to keep spacing between labels consistent
-        JPanel gridBagPanel = new JPanel();
-        gridBagPanel.setLayout(new GridBagLayout());
+        JPanel songHolderPanel = new JPanel();
+        songHolderPanel.setLayout(new BoxLayout(songHolderPanel, BoxLayout.PAGE_AXIS));
 
         JPanel columnNamePanel = new JPanel();
-        columnNamePanel.setLayout(new GridBagLayout());
+        columnNamePanel.setLayout(new BoxLayout(columnNamePanel, BoxLayout.LINE_AXIS));
 
         JLabel songTitleLabel = new JLabel("Song Title");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel artistLabel = new JLabel("Artist");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel albumLabel = new JLabel("Album");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel trackLabel = new JLabel("Track");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel timeLabel = new JLabel("Time");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel genreLabel = new JLabel("Genre");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
         JLabel playsLabel = new JLabel("Plays");
+        songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
 
-        GridBagConstraints songHoldeGridBagConstraints = new GridBagConstraints();
+        columnNamePanel.add(songTitleLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(artistLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(albumLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(trackLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(timeLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(genreLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
+        columnNamePanel.add(playsLabel);
+        columnNamePanel.add(Box.createRigidArea(new Dimension(5,5)));
 
-        songHoldeGridBagConstraints.gridx = 0;
-        songHoldeGridBagConstraints.weightx = 0;
-        songHoldeGridBagConstraints.weighty = 1;
-        songHoldeGridBagConstraints.anchor = GridBagConstraints.WEST;
-        songHoldeGridBagConstraints.insets = new Insets(5, 5, 5, 5);
-        columnNamePanel.add(songTitleLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 1;
-        columnNamePanel.add(artistLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 2;
-        columnNamePanel.add(albumLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 3;
-        columnNamePanel.add(trackLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 4;
-        columnNamePanel.add(timeLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 5;
-        columnNamePanel.add(genreLabel, songHoldeGridBagConstraints);
-        songHoldeGridBagConstraints.gridx = 6;
-        columnNamePanel.add(playsLabel, songHoldeGridBagConstraints);
-
-        gridBagPanel.add(columnNamePanel);
+        songHolderPanel.add(columnNamePanel);
 
         File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a furture point
         // For song in songs folder, get meta data and put into a list
@@ -74,22 +75,17 @@ public class DisplayPanel extends JPanel {
         for(File song: songsFolder.listFiles()){
             AudioFile songFile = AudioFileIO.read(song);
             Tag songTag = songFile.getTag();
-            System.out.println(songTag.getFirst(FieldKey.ARTIST));
-        }
 
-        for(int i = 0; i < 10; i++){
-            displayPanelConstraints.gridx = 0;
-            displayPanelConstraints.gridy = i;
-            displayPanelConstraints.gridheight = 1;
-            displayPanelConstraints.gridwidth = 1;
-            displayPanelConstraints.weightx = 0;
-            displayPanelConstraints.weighty = 1;
-            displayPanelConstraints.anchor = GridBagConstraints.WEST;
-            displayPanelConstraints.fill = GridBagConstraints.NONE;
-            gridBagPanel.add(new SongHolderPanel(), displayPanelConstraints);
+            SongHolderPanel tempSongHolderPanel = new SongHolderPanel();
+            tempSongHolderPanel.setSongTitleLabel(songTag.getFirst(FieldKey.TITLE));
+            tempSongHolderPanel.setArtistLabel(songTag.getFirst(FieldKey.ARTIST));
+            tempSongHolderPanel.setAlbumLabel(songTag.getFirst(FieldKey.ALBUM));
+
+            songHolderPanel.add(tempSongHolderPanel);
+            songHolderPanel.add(Box.createRigidArea(new Dimension(50,5)));
         }
         
-        westPanel.add(gridBagPanel, BorderLayout.WEST);
+        westPanel.add(songHolderPanel, BorderLayout.WEST);
 
         this.add(westPanel, BorderLayout.NORTH);
         this.setVisible(true);
