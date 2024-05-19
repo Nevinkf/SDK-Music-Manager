@@ -105,7 +105,7 @@ public class DisplayPanel extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     try {
-                        mainFrameHolder.playSong("Heaven Pierce Her - ULTRAKILL- INFINITE HYPERDEATH - 01 The Fire Is Gone (for Piano, Saxophone and Trumpet).mp3");
+                        mainFrameHolder.playSong(songHolderList.get(songHolderList.indexOf(testHolderPanel)).getSongFileName());
                     } catch (FileNotFoundException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
