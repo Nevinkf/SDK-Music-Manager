@@ -41,6 +41,12 @@ public class SongHolderPanel extends JPanel{
     }
 
     public void setSongTitleLabel(String newSongTitle){
+        /** 
+        Description:
+        Arguments:
+        Return: 
+        
+        **/
         songTitleLabel.setText(newSongTitle);
     }
 
