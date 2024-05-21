@@ -6,9 +6,15 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
+import javazoom.jl.decoder.Bitstream;
+import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.advanced.AdvancedPlayer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
+
+import javax.sound.sampled.*;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -23,6 +29,8 @@ public class MainFrame extends JFrame {
     AdvancedPlayer songPlayer;
     SongHolderPanel selectedSong;
     boolean songPaused = true;
+    int pausedFrame;
+    int currentPosition;
 
     MainFrame()
             throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
@@ -68,8 +76,20 @@ public class MainFrame extends JFrame {
                 songPaused = false;
                 String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
                 FileInputStream songFileInputStream = new FileInputStream(tempFilePath);
+
+                songFileInputStream = new FileInputStream(tempFilePath);
+
                 songPlayer = new AdvancedPlayer(songFileInputStream);
-                songPlayer.play();
+                songPlayer.setPlayBackListener(new PlaybackListener() {
+                    
+                    public void playbackFinished(PlaybackEvent e){
+                        //When switching songs, check if frame is last frame
+                        pausedFrame = e.getFrame();
+                        currentPosition += pausedFrame;
+                        System.out.println("Hello!" + e.getFrame());
+                    }
+                });
+                songPlayer.play(0, Integer.MAX_VALUE);
 
             } catch (JavaLayerException e) {
                 // TODO Auto-generated catch block
@@ -92,8 +112,12 @@ public class MainFrame extends JFrame {
     public void pauseSong() {
         if (songPlayer != null) {
             songPaused = true;
-            songPlayer.close();
+            songPlayer.stop();
         }
+    }
+
+    public void resumeSong() {
+
     }
 
     public void changeSelectedSong(SongHolderPanel newSelectedSong) {
@@ -103,6 +127,7 @@ public class MainFrame extends JFrame {
         } else {
             selectedSong = newSelectedSong;
         }
+        currentPosition = 0;
     }
 
 }
