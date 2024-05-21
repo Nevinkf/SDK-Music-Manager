@@ -1,8 +1,9 @@
 package nevinkf;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class SongHolderPanel extends JPanel{
+public class SongHolderPanel extends JPanel {
 
     JLabel songTitleLabel;
     JLabel artistLabel;
@@ -13,102 +14,113 @@ public class SongHolderPanel extends JPanel{
     JLabel playsLabel;
     String songFileName;
 
-    SongHolderPanel(){
+    Boolean isSelected;
+
+    SongHolderPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         songTitleLabel = new JLabel("Test");
-        songTitleLabel.setPreferredSize(new Dimension(100,10)); // IMPORTANT
+        songTitleLabel.setPreferredSize(new Dimension(100, 10)); // IMPORTANT
         artistLabel = new JLabel("Test");
         albumLabel = new JLabel("Test");
         trackLabel = new JLabel("Test");
         timeLabel = new JLabel("Test");
         genreLabel = new JLabel("Test");
         playsLabel = new JLabel("Test");
-        
+
         this.add(songTitleLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(artistLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(albumLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(trackLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(timeLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(genreLabel);
-        this.add(Box.createRigidArea(new Dimension(10,5)));
+        this.add(Box.createRigidArea(new Dimension(10, 5)));
         this.add(playsLabel);
+
+        isSelected = false;
     }
 
-    public void setSongTitleLabel(String newSongTitle){
-        /** 
-        Description:
-        Arguments:
-        Return: 
-        
-        **/
+    public void setSongTitleLabel(String newSongTitle) {
+        /**
+         * Description:
+         * Arguments:
+         * Return:
+         * 
+         **/
         songTitleLabel.setText(newSongTitle);
     }
 
-    public JLabel getSongTitleLabel(){
+    public JLabel getSongTitleLabel() {
         return songTitleLabel;
     }
 
-    public void setArtistLabel(String newArtist){
+    public void setArtistLabel(String newArtist) {
         artistLabel.setText(newArtist);
     }
 
-    public JLabel getArtistLabel(){
+    public JLabel getArtistLabel() {
         return artistLabel;
     }
 
-    public void setAlbumLabel(String newAlbumLabel){
+    public void setAlbumLabel(String newAlbumLabel) {
         albumLabel.setText(newAlbumLabel);
     }
 
-    public JLabel getAlbumLabel(){
+    public JLabel getAlbumLabel() {
         return albumLabel;
     }
 
-    public void setTrackLabel(String newTrackLabel){
+    public void setTrackLabel(String newTrackLabel) {
         trackLabel.setText(newTrackLabel);
     }
 
-    public JLabel getTrackLabel(){
+    public JLabel getTrackLabel() {
         return trackLabel;
     }
 
-    public void setTimeLabel(String newTimeLabel){
+    public void setTimeLabel(String newTimeLabel) {
         timeLabel.setText(newTimeLabel);
     }
 
-    public JLabel getTimeLabel(){
+    public JLabel getTimeLabel() {
         return timeLabel;
     }
 
-    public void setGenreLabel(String newGenreLabel){
+    public void setGenreLabel(String newGenreLabel) {
         genreLabel.setText(newGenreLabel);
     }
 
-    public JLabel getGenreLabel(){
+    public JLabel getGenreLabel() {
         return genreLabel;
     }
 
-    public void setPlaysLabel(String newPlaysLabel){
+    public void setPlaysLabel(String newPlaysLabel) {
         playsLabel.setText(newPlaysLabel);
     }
 
-    public JLabel getPlaysLabel(){
+    public JLabel getPlaysLabel() {
         return playsLabel;
     }
 
-    public void setSongFileName(String newSongFileName){
+    public void setSongFileName(String newSongFileName) {
         songFileName = newSongFileName;
     }
 
-    public String getSongFileName(){
+    public String getSongFileName() {
         return songFileName;
     }
 
+    public void setIsSelected(boolean newIsSelected) {
+        isSelected = newIsSelected;
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
+    }
 
 }

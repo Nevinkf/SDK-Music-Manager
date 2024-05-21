@@ -1,4 +1,5 @@
 package nevinkf;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +14,8 @@ import javazoom.jl.player.Player;
 
 public class MountaineerMusicManager {
 
-    public static void main(String[] arg) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, JavaLayerException {
+    public static void main(String[] arg) throws CannotReadException, IOException, TagException, ReadOnlyFileException,
+            InvalidAudioFrameException, JavaLayerException {
         new MainFrame();
     }
 
