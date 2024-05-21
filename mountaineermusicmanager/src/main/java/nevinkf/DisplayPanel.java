@@ -91,7 +91,6 @@ public class DisplayPanel extends JPanel {
             Tag songTag = songFile.getTag();
 
             SongHolderPanel tempSongHolderPanel = new SongHolderPanel();
-            testHolderPanel = tempSongHolderPanel;
             songHolderList.add(tempSongHolderPanel);
             tempSongHolderPanel.setSongTitleLabel(songTag.getFirst(FieldKey.TITLE));
             tempSongHolderPanel.setArtistLabel(songTag.getFirst(FieldKey.ARTIST));
@@ -100,42 +99,7 @@ public class DisplayPanel extends JPanel {
             // tempSongHolderPanel.setTimeLabel(songTag.getValue(FieldKey., ABORT); Figure out later
             tempSongHolderPanel.setGenreLabel(songTag.getFirst(FieldKey.GENRE));
             tempSongHolderPanel.setSongFileName(song.getName());
-            tempSongHolderPanel.addMouseListener(new MouseListener() {
-
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    try {
-                        mainFrameHolder.playSong(songHolderList.get(songHolderList.indexOf(testHolderPanel)).getSongFileName());
-                    } catch (FileNotFoundException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    } catch (JavaLayerException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    // TODO Auto-generated method stub
-                }
-                
-            });
+            tempSongHolderPanel.addMouseListener(new SongHolderMouseListener(tempSongHolderPanel, mainFrameHolder));
 
             songHolderPanel.add(tempSongHolderPanel);
             songHolderPanel.add(Box.createRigidArea(new Dimension(50,5)));

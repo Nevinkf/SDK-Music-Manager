@@ -12,11 +12,13 @@ import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
     BorderLayout mainFrameLayout;
+    boolean songPlaying;
 
     MainFrame() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,10 +58,24 @@ public class MainFrame extends JFrame {
     }
 
     public void playSong(String mp3String) throws JavaLayerException, FileNotFoundException{
-        String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
-        FileInputStream testFInputStream = new FileInputStream(tempFilePath);
-        Player testPlayer = new Player(testFInputStream);
-        testPlayer.play();
+        CompletableFuture<Void> asyncFuture = CompletableFuture.runAsync(() -> {
+            // Simulate long-running task
+            try {
+                String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
+                FileInputStream testFInputStream = new FileInputStream(tempFilePath);
+                Player testPlayer = new Player(testFInputStream);
+                testPlayer.play();
+            } catch (JavaLayerException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            System.out.println("Task completed!");
+        });
+
+        
     }
 
 }
