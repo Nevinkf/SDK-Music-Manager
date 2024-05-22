@@ -1,9 +1,7 @@
 package nevinkf;
 
 import javax.swing.*;
-
 import javazoom.jl.decoder.JavaLayerException;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +10,8 @@ import java.io.FileNotFoundException;
 public class OptionsPanel extends JPanel {
 
     JButton playButton;
+    JButton nextSongButton;
+    JButton lastSongButton;
     GridBagConstraints optionsGridBagConstraints;
     MainFrame mainFrameHolder;
 
@@ -22,6 +22,7 @@ public class OptionsPanel extends JPanel {
 
         mainFrameHolder = mainFrame;
         optionsGridBagConstraints = new GridBagConstraints();
+
         playButton = new JButton("Play/Pause");
         playButton.addActionListener(new ActionListener() {
 
@@ -42,10 +43,33 @@ public class OptionsPanel extends JPanel {
                     }
                 }
             }
-
         });
 
+        nextSongButton = new JButton("Next Song");
+        nextSongButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainFrameHolder.selectedSong != null) {
+                    mainFrameHolder.changeToNextSong();
+                }
+            }
+        });
+
+        lastSongButton = new JButton("Last Song");
+        lastSongButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (mainFrameHolder.selectedSong != null) {
+                    mainFrameHolder.changeToLastSong();
+                }
+            }
+        });
+
+        this.add(lastSongButton, optionsGridBagConstraints);
         this.add(playButton, optionsGridBagConstraints);
+        this.add(nextSongButton, optionsGridBagConstraints);
     }
 
 }

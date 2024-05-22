@@ -96,11 +96,38 @@ public class MainFrame extends JFrame {
     public void changeToNextSong() {
         // take position of current song in list
         List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
-        
+        System.out.println(tempList.indexOf(currentSong) + ", " + tempList.size());
+
+        if (tempList.indexOf(currentSong) >= tempList.size() - 1) {
+            changeSong(tempList.get(0));
+        } else {
+            changeSong(tempList.get(tempList.indexOf(currentSong) + 1));
+        }
+
+        try {
+            playSong();
+        } catch (FileNotFoundException | JavaLayerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     public void changeToLastSong() {
+        List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+        System.out.println(tempList.indexOf(currentSong) + ", " + tempList.size());
+        if (tempList.indexOf(currentSong) == 0) {
+            changeSong(tempList.get(tempList.size() - 1));
+        } else {
+            changeSong(tempList.get(tempList.indexOf(currentSong) - 1));
+        }
 
+        try {
+            playSong();
+        } catch (FileNotFoundException | JavaLayerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void changeSelectedSong(SongHolderPanel newSelectedSong) {
