@@ -34,11 +34,8 @@ public class OptionsPanel extends JPanel {
                 } else {
                     if (mainFrameHolder.selectedSong != null) {
                         try {
-                            mainFrameHolder.playSong(mainFrameHolder.selectedSong.getSongFileName());
-                        } catch (FileNotFoundException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        } catch (JavaLayerException e1) {
+                            mainFrameHolder.playSong();
+                        } catch (FileNotFoundException | JavaLayerException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }

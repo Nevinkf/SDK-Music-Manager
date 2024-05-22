@@ -3,10 +3,7 @@ package nevinkf;
 import javax.swing.*;
 import java.util.List;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -18,7 +15,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-import javazoom.jl.decoder.JavaLayerException;
 
 public class DisplayPanel extends JPanel {
 

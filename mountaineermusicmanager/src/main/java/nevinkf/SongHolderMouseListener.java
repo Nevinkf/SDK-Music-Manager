@@ -19,22 +19,20 @@ public class SongHolderMouseListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
-        try {
             if (e.getClickCount() >= 2) {
                 songHolderPanelHolder.setIsSelected(true);
                 mainFrameHolder.changeSelectedSong(songHolderPanelHolder);
-                mainFrameHolder.playSong(songHolderPanelHolder.getSongFileName());
+                mainFrameHolder.changeSong(songHolderPanelHolder.getSongFileName());
+                try {
+                    mainFrameHolder.playSong();
+                } catch (FileNotFoundException | JavaLayerException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             } else {
                 songHolderPanelHolder.setIsSelected(true);
                 mainFrameHolder.changeSelectedSong(songHolderPanelHolder);
             }
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (JavaLayerException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
     }
 
     @Override

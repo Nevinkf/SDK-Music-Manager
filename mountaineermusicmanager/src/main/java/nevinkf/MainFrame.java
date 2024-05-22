@@ -6,18 +6,12 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import javazoom.jl.player.advanced.AdvancedPlayer;
-import javazoom.jl.player.advanced.PlaybackEvent;
-import javazoom.jl.player.advanced.PlaybackListener;
-
-import javax.sound.sampled.*;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.*;
 
 import java.awt.*;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -26,16 +20,19 @@ public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
     BorderLayout mainFrameLayout;
-    AdvancedPlayer songPlayer;
+    // AdvancedPlayer songPlayer;
+    MediaPlayer songPlayer;
     SongHolderPanel selectedSong;
     boolean songPaused = true;
     int pausedFrame;
     int currentPosition;
 
-    MainFrame()
-            throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+    MainFrame() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+
+        // Used here to initialize toolkit for jfx media player
+        JFXPanel jfxPanel = new JFXPanel();
 
         mainFrameLayout = new BorderLayout();
 
@@ -69,56 +66,31 @@ public class MainFrame extends JFrame {
         this.pack();
     }
 
-    public void playSong(String mp3String) throws JavaLayerException, FileNotFoundException {
-        CompletableFuture<Void> asyncFuture = CompletableFuture.runAsync(() -> {
-            try {
-                stopSong();
-                songPaused = false;
-                String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
-                FileInputStream songFileInputStream = new FileInputStream(tempFilePath);
-
-                songFileInputStream = new FileInputStream(tempFilePath);
-
-                songPlayer = new AdvancedPlayer(songFileInputStream);
-                songPlayer.setPlayBackListener(new PlaybackListener() {
-                    
-                    public void playbackFinished(PlaybackEvent e){
-                        //When switching songs, check if frame is last frame
-                        pausedFrame = e.getFrame();
-                        currentPosition += pausedFrame;
-                        System.out.println("Hello!" + e.getFrame());
-                    }
-                });
-                songPlayer.play(0, Integer.MAX_VALUE);
-
-            } catch (JavaLayerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            System.out.println("Task completed!");
-        });
+    public void playSong() throws JavaLayerException, FileNotFoundException {
+        songPaused = false;
+        songPlayer.play();
     }
 
-    public void stopSong() {
-        if (songPlayer != null) {
-            songPaused = true;
-            songPlayer.close();
-        }
+    //new function to change song
+
+    public void changeSong(String mp3String) {
+        String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
+        Media media = new Media(new File(tempFilePath).toURI().toString());  
+        songPlayer = new MediaPlayer(media);
     }
 
     public void pauseSong() {
         if (songPlayer != null) {
             songPaused = true;
-            songPlayer.stop();
+            songPlayer.pause();
         }
     }
 
-    public void resumeSong() {
-
-    }
+    // public void resumeSong() {
+    //     if (songPlayer != null){
+    //         songPlayer.play();
+    //     }
+    // }
 
     public void changeSelectedSong(SongHolderPanel newSelectedSong) {
         if (selectedSong != null){
