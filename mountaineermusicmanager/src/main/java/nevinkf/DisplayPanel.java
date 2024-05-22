@@ -96,7 +96,6 @@ public class DisplayPanel extends JPanel {
             tempSongHolderPanel.setAlbumLabel(songTag.getFirst(FieldKey.ALBUM));
             tempSongHolderPanel.setTrackLabel(songTag.getFirst(FieldKey.TRACK));
             // tempSongHolderPanel.setTimeLabel(songTag.getValue(FieldKey., ABORT); Figure
-            // out later
             tempSongHolderPanel.setGenreLabel(songTag.getFirst(FieldKey.GENRE));
             tempSongHolderPanel.setSongFileName(song.getName());
             tempSongHolderPanel.addMouseListener(new SongHolderMouseListener(tempSongHolderPanel, mainFrameHolder));
@@ -109,7 +108,10 @@ public class DisplayPanel extends JPanel {
 
         this.add(westPanel, BorderLayout.NORTH);
         this.setVisible(true);
+    }
 
+    public List<SongHolderPanel> getSongHolderList() {
+        return songHolderList;
     }
 
 }

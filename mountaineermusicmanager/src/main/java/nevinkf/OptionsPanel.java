@@ -29,7 +29,7 @@ public class OptionsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 // if song is playing, pause song, else play/resume song
-                if (mainFrameHolder.songPaused == false){
+                if (mainFrameHolder.songPaused == false) {
                     mainFrameHolder.pauseSong();
                 } else {
                     if (mainFrameHolder.selectedSong != null) {

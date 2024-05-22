@@ -11,28 +11,33 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.*;
 
 import java.awt.*;
+import java.util.List;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public class MainFrame extends JFrame {
 
     JMenuBar menuBar;
     BorderLayout mainFrameLayout;
-    // AdvancedPlayer songPlayer;
     MediaPlayer songPlayer;
     SongHolderPanel selectedSong;
+    SongHolderPanel currentSong;
+    DisplayPanel displayPanel;
+    SideBarPanel sideBarPanel;
+    OptionsPanel optionsPanel;
     boolean songPaused = true;
-    int pausedFrame;
-    int currentPosition;
 
-    MainFrame() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+    MainFrame()
+            throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
         // Used here to initialize toolkit for jfx media player
         JFXPanel jfxPanel = new JFXPanel();
+        displayPanel = new DisplayPanel(this);
+        sideBarPanel = new SideBarPanel();
+        optionsPanel = new OptionsPanel(this);
 
         mainFrameLayout = new BorderLayout();
 
@@ -50,17 +55,17 @@ public class MainFrame extends JFrame {
 
         JScrollPane sideBarScrollPane = new JScrollPane();
         sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sideBarScrollPane.setViewportView(new SideBarPanel());
+        sideBarScrollPane.setViewportView(sideBarPanel);
 
         JScrollPane displayScrollPane = new JScrollPane();
-        displayScrollPane.setViewportView(new DisplayPanel(this));
+        displayScrollPane.setViewportView(displayPanel);
 
         JSplitPane sideAndDisplaySplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sideBarScrollPane,
                 displayScrollPane);
 
         this.add(sideAndDisplaySplitPane, BorderLayout.CENTER);
 
-        this.add(new OptionsPanel(this), BorderLayout.NORTH);
+        this.add(optionsPanel, BorderLayout.NORTH);
 
         this.setVisible(true);
         this.pack();
@@ -71,14 +76,6 @@ public class MainFrame extends JFrame {
         songPlayer.play();
     }
 
-    //new function to change song
-
-    public void changeSong(String mp3String) {
-        String tempFilePath = "mountaineermusicmanager/songs/" + mp3String;
-        Media media = new Media(new File(tempFilePath).toURI().toString());  
-        songPlayer = new MediaPlayer(media);
-    }
-
     public void pauseSong() {
         if (songPlayer != null) {
             songPaused = true;
@@ -86,20 +83,33 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // public void resumeSong() {
-    //     if (songPlayer != null){
-    //         songPlayer.play();
-    //     }
-    // }
+    public void changeSong(SongHolderPanel songHolderPanel) {
+        if (songPlayer != null) {
+            songPlayer.stop();
+        }
+        currentSong = songHolderPanel;
+        String tempFilePath = "mountaineermusicmanager/songs/" + songHolderPanel.getSongFileName();
+        Media media = new Media(new File(tempFilePath).toURI().toString());
+        songPlayer = new MediaPlayer(media);
+    }
+
+    public void changeToNextSong() {
+        // take position of current song in list
+        List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+        
+    }
+
+    public void changeToLastSong() {
+
+    }
 
     public void changeSelectedSong(SongHolderPanel newSelectedSong) {
-        if (selectedSong != null){
+        if (selectedSong != null) {
             selectedSong.setIsSelected(false);
             selectedSong = newSelectedSong;
         } else {
             selectedSong = newSelectedSong;
         }
-        currentPosition = 0;
     }
 
 }
