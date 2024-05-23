@@ -18,23 +18,22 @@ import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
-    JMenuBar menuBar;
-    BorderLayout mainFrameLayout;
-    MediaPlayer songPlayer;
-    SongHolderPanel selectedSong;
-    SongHolderPanel currentSong;
-    DisplayPanel displayPanel;
-    SideBarPanel sideBarPanel;
-    OptionsPanel optionsPanel;
-    boolean songPaused = true;
+    private JMenuBar menuBar;
+    private BorderLayout mainFrameLayout;
+    private MediaPlayer songPlayer;
+    private SongHolderPanel selectedSong;
+    private SongHolderPanel currentSong;
+    private DisplayPanel displayPanel;
+    private SideBarPanel sideBarPanel;
+    private OptionsPanel optionsPanel;
+    private boolean songPaused = true;
 
     MainFrame()
             throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
-        // Used here to initialize toolkit for jfx media player
-        JFXPanel jfxPanel = new JFXPanel();
+        JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
         sideBarPanel = new SideBarPanel();
         optionsPanel = new OptionsPanel(this);
@@ -67,8 +66,8 @@ public class MainFrame extends JFrame {
 
         this.add(optionsPanel, BorderLayout.NORTH);
 
-        this.setVisible(true);
         this.pack();
+        this.setVisible(true);
     }
 
     public void playSong() throws JavaLayerException, FileNotFoundException {
@@ -91,6 +90,14 @@ public class MainFrame extends JFrame {
         String tempFilePath = "mountaineermusicmanager/songs/" + songHolderPanel.getSongFileName();
         Media media = new Media(new File(tempFilePath).toURI().toString());
         songPlayer = new MediaPlayer(media);
+        songPlayer.setOnReady(() -> {
+            int songDuration = (int) Math.round(songPlayer.getTotalDuration().toSeconds());
+            optionsPanel.setProgressBar(songDuration);
+            songPlayer.currentTimeProperty().addListener((observable, oldTime, newTime) -> {
+                optionsPanel.updateProgressBar(newTime);
+            });
+        });
+
     }
 
     public void changeToNextSong() {
@@ -137,6 +144,22 @@ public class MainFrame extends JFrame {
         } else {
             selectedSong = newSelectedSong;
         }
+    }
+
+    public SongHolderPanel getCurrentSong() {
+        return currentSong;
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return songPlayer;
+    }
+
+    public boolean isSongPaused() {
+        return songPaused;
+    }
+
+    public void setSongPaused(boolean newBool) {
+        songPaused = newBool;
     }
 
 }

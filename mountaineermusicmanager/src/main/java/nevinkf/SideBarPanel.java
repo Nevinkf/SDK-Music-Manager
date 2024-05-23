@@ -9,7 +9,6 @@ public class SideBarPanel extends JPanel {
     GridBagConstraints sideBarConstraints;
 
     SideBarPanel() {
-        this.setBackground(Color.red);
         this.setLayout(new BorderLayout());
 
         sideBarConstraints = new GridBagConstraints();
@@ -43,6 +42,5 @@ public class SideBarPanel extends JPanel {
         westPanel.add(gridBagPanel, BorderLayout.WEST);
 
         this.add(westPanel, BorderLayout.NORTH);
-        this.setVisible(true);
     }
 }

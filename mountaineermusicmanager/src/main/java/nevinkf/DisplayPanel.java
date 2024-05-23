@@ -26,7 +26,6 @@ public class DisplayPanel extends JPanel {
 
     DisplayPanel(MainFrame mainFrame)
             throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        this.setBackground(Color.blue);
         this.setLayout(new BorderLayout());
         mainFrameHolder = mainFrame;
         songHolderList = new ArrayList<SongHolderPanel>();
@@ -107,7 +106,6 @@ public class DisplayPanel extends JPanel {
         westPanel.add(songHolderPanel, BorderLayout.WEST);
 
         this.add(westPanel, BorderLayout.NORTH);
-        this.setVisible(true);
     }
 
     public List<SongHolderPanel> getSongHolderList() {
