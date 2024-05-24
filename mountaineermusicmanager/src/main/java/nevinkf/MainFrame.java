@@ -32,6 +32,7 @@ public class MainFrame extends JFrame {
             throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setTitle("Mountaineer Music Manager");
 
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
