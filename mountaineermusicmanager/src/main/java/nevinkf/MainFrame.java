@@ -99,6 +99,12 @@ public class MainFrame extends JFrame {
             });
         });
 
+        songPlayer.setOnEndOfMedia(() -> {
+            List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+            if (tempList.indexOf(currentSong) < tempList.size() - 1) {
+                changeToNextSong();
+            }
+        });
     }
 
     public void changeToNextSong() {
