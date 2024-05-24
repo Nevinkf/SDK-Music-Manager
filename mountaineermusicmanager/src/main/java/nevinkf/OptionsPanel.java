@@ -19,6 +19,7 @@ public class OptionsPanel extends JPanel {
     private JButton nextSongButton;
     private JButton lastSongButton;
     private JSlider songSlider;
+    private JSlider volumeSlider;
     private GridBagConstraints optionsGridBagConstraints;
     private MainFrame mainFrameHolder;
     private boolean mouseIsDragging;
@@ -83,6 +84,22 @@ public class OptionsPanel extends JPanel {
         optionsGridBagConstraints.gridwidth = 3;
         this.add(songSlider, optionsGridBagConstraints);
 
+        optionsGridBagConstraints.gridx = 3; // Redo gridbag for rest of items    
+        optionsGridBagConstraints.gridy = 0;
+        optionsGridBagConstraints.gridwidth = 2;
+        volumeSlider = new JSlider(0, 100, 100);
+        volumeSlider.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (mainFrame.getMediaPlayer() != null){
+                    mainFrame.setSongVolume((double) volumeSlider.getValue() / 100);
+                }
+            }
+            
+        });
+        this.add(volumeSlider, optionsGridBagConstraints);
+
     }
 
     public void setProgressBar(int endTime) {
@@ -123,8 +140,11 @@ public class OptionsPanel extends JPanel {
             }
             
         });
+        optionsGridBagConstraints.gridx = 0;
+        optionsGridBagConstraints.gridy = 1;
+        optionsGridBagConstraints.gridwidth = 3;
         this.add(songSlider, optionsGridBagConstraints);
-        songSlider.revalidate();
+        songSlider.revalidate(); // Used to make sure slider works without resizing screen
     }
 
     public void updateProgressBar(Duration currentTime) {
