@@ -14,7 +14,7 @@ public class OptionsPanel extends JPanel {
     private JButton playButton;
     private JButton nextSongButton;
     private JButton lastSongButton;
-    private JProgressBar songProgressBar;
+    private JSlider songProgressBar;
     private GridBagConstraints optionsGridBagConstraints;
     private MainFrame mainFrameHolder;
 
@@ -72,7 +72,7 @@ public class OptionsPanel extends JPanel {
         });
         this.add(nextSongButton, optionsGridBagConstraints);
 
-        songProgressBar = new JProgressBar();
+        songProgressBar = new JSlider(); //Switch to Jslider
 
         optionsGridBagConstraints.gridy = 1;
         optionsGridBagConstraints.gridwidth = 3;
@@ -82,7 +82,7 @@ public class OptionsPanel extends JPanel {
 
     public void setProgressBar(int endTime) {
         this.remove(songProgressBar);
-        songProgressBar = new JProgressBar(0, endTime);
+        songProgressBar = new JSlider(0, endTime);
         this.add(songProgressBar, optionsGridBagConstraints);
         songProgressBar.revalidate();
     }
