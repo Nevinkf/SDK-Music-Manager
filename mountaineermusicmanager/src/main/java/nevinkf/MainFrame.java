@@ -92,10 +92,9 @@ public class MainFrame extends JFrame {
         Media media = new Media(new File(tempFilePath).toURI().toString());
         songPlayer = new MediaPlayer(media);
         songPlayer.setOnReady(() -> {
-            int songDuration = (int) Math.round(songPlayer.getTotalDuration().toSeconds());
-            optionsPanel.setProgressBar(songDuration);
+            optionsPanel.setProgressBarAndEndTime(songPlayer.getTotalDuration());
             songPlayer.currentTimeProperty().addListener((observable, oldTime, newTime) -> {
-                optionsPanel.updateProgressBar(newTime);
+                optionsPanel.updateProgressBarAndCurrentTime(newTime);
             });
         });
 

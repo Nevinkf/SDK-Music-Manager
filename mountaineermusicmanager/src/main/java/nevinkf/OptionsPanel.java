@@ -20,6 +20,8 @@ public class OptionsPanel extends JPanel {
     private JButton lastSongButton;
     private JSlider songSlider;
     private JSlider volumeSlider;
+    private JLabel currentTimeLabel;
+    private JLabel endTimeLabel;
     private GridBagConstraints optionsGridBagConstraints;
     private MainFrame mainFrameHolder;
     private boolean mouseIsDragging;
@@ -78,11 +80,26 @@ public class OptionsPanel extends JPanel {
         });
         this.add(nextSongButton, optionsGridBagConstraints);
 
-        songSlider = new JSlider(0, 1, 0); //Switch to Jslider
+        currentTimeLabel = new JLabel("0:00");
 
+        optionsGridBagConstraints.gridx = 0;
         optionsGridBagConstraints.gridy = 1;
-        optionsGridBagConstraints.gridwidth = 3;
+        optionsGridBagConstraints.gridwidth = 1;
+        this.add(currentTimeLabel, optionsGridBagConstraints);
+
+        songSlider = new JSlider(0, 1, 0);
+
+        optionsGridBagConstraints.gridx = 1;
+        optionsGridBagConstraints.gridy = 1;
+        optionsGridBagConstraints.gridwidth = 2;
         this.add(songSlider, optionsGridBagConstraints);
+
+        endTimeLabel = new JLabel("0:00");
+
+        optionsGridBagConstraints.gridx = 3;
+        optionsGridBagConstraints.gridy = 1;
+        optionsGridBagConstraints.gridwidth = 1;
+        this.add(endTimeLabel, optionsGridBagConstraints);
 
         optionsGridBagConstraints.gridx = 3; // Redo gridbag for rest of items    
         optionsGridBagConstraints.gridy = 0;
@@ -102,9 +119,9 @@ public class OptionsPanel extends JPanel {
 
     }
 
-    public void setProgressBar(int endTime) {
+    public void setProgressBarAndEndTime(Duration endTime) {
         this.remove(songSlider);
-        songSlider = new JSlider(0, endTime, 0);
+        songSlider = new JSlider(0, (int) Math.round(endTime.toSeconds()), 0);
         songSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -140,15 +157,37 @@ public class OptionsPanel extends JPanel {
             }
             
         });
-        optionsGridBagConstraints.gridx = 0;
+        optionsGridBagConstraints.gridx = 1;
         optionsGridBagConstraints.gridy = 1;
-        optionsGridBagConstraints.gridwidth = 3;
+        optionsGridBagConstraints.gridwidth = 2;
         this.add(songSlider, optionsGridBagConstraints);
         songSlider.revalidate(); // Used to make sure slider works without resizing screen
+
+        double seconds = Math.floor(endTime.toSeconds() - 60 * (Math.floorDiv((int) endTime.toSeconds(), 60)));
+        int endTimeSeconds = (int) seconds;
+        double minutes = Math.floor(endTime.toMinutes());
+        int endTimeMinutes = (int) minutes;
+
+        if (endTimeSeconds < 10) {
+            endTimeLabel.setText(endTimeMinutes + ":0" + endTimeSeconds);
+        } else {
+            endTimeLabel.setText(endTimeMinutes + ":" + endTimeSeconds);
+        }
     }
 
-    public void updateProgressBar(Duration currentTime) {
+    public void updateProgressBarAndCurrentTime(Duration currentTime) {
         songSlider.setValue((int) Math.round(currentTime.toSeconds()));
+        double seconds = Math.floor(currentTime.toSeconds() - 60 * (Math.floorDiv((int) currentTime.toSeconds(), 60)));
+        int currentTimeSeconds = (int) seconds;
+        double minutes = Math.floor(currentTime.toMinutes());
+        int currentTimeMinutes = (int) minutes;
+
+        if (currentTimeSeconds < 10) {
+            currentTimeLabel.setText(currentTimeMinutes + ":0" + currentTimeSeconds);
+        } else {
+            currentTimeLabel.setText(currentTimeMinutes + ":" + currentTimeSeconds);
+        }
 
     }
+
 }
