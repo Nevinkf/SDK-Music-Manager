@@ -162,10 +162,6 @@ public class MainFrame extends JFrame {
     }
 
     public void setSongVolume(double newSongVolume) {
-        if (newSongVolume == (int) newSongVolume){
-            System.out.println("Hellow " + newSongVolume);
-
-        }
         songPlayer.setVolume(newSongVolume);
     }
 
