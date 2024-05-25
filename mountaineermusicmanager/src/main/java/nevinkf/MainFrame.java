@@ -109,7 +109,6 @@ public class MainFrame extends JFrame {
     public void changeToNextSong() {
         // take position of current song in list
         List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
-        System.out.println(tempList.indexOf(currentSong) + ", " + tempList.size());
 
         if (tempList.indexOf(currentSong) >= tempList.size() - 1) {
             changeSong(tempList.get(0));
