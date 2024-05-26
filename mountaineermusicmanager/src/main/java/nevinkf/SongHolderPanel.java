@@ -17,6 +17,7 @@ public class SongHolderPanel extends JPanel {
     Boolean isSelected;
 
     SongHolderPanel() {
+        //Obsolote
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         songTitleLabel = new JLabel("Test");

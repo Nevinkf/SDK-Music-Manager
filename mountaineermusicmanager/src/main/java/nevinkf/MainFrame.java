@@ -21,8 +21,8 @@ public class MainFrame extends JFrame {
     private JMenuBar menuBar;
     private BorderLayout mainFrameLayout;
     private MediaPlayer songPlayer;
-    private SongHolderPanel selectedSong;
-    private SongHolderPanel currentSong;
+    private File selectedSong;
+    private File currentSong;
     private DisplayPanel displayPanel;
     private SideBarPanel sideBarPanel;
     private OptionsPanel optionsPanel;
@@ -83,13 +83,13 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void changeSong(SongHolderPanel songHolderPanel) {
+    public void changeSong(File songFile) {
         if (songPlayer != null) {
             songPlayer.stop();
         }
-        currentSong = songHolderPanel;
-        String tempFilePath = "mountaineermusicmanager/songs/" + songHolderPanel.getSongFileName();
-        Media media = new Media(new File(tempFilePath).toURI().toString());
+        currentSong = songFile;
+        // String tempFilePath = "mountaineermusicmanager/songs/" + songFile.toURI().toString();
+        Media media = new Media(songFile.toURI().toString());
         songPlayer = new MediaPlayer(media);
         songPlayer.setOnReady(() -> {
             optionsPanel.setProgressBarAndEndTime(songPlayer.getTotalDuration());
@@ -99,7 +99,7 @@ public class MainFrame extends JFrame {
         });
 
         songPlayer.setOnEndOfMedia(() -> {
-            List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+            List<File> tempList = displayPanel.getMP3FileNameList();
             if (tempList.indexOf(currentSong) < tempList.size() - 1) {
                 changeToNextSong();
             }
@@ -108,7 +108,7 @@ public class MainFrame extends JFrame {
 
     public void changeToNextSong() {
         // take position of current song in list
-        List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+        List<File> tempList = displayPanel.getMP3FileNameList();
 
         if (tempList.indexOf(currentSong) >= tempList.size() - 1) {
             changeSong(tempList.get(0));
@@ -126,7 +126,7 @@ public class MainFrame extends JFrame {
     }
 
     public void changeToLastSong() {
-        List<SongHolderPanel> tempList = displayPanel.getSongHolderList();
+        List<File> tempList = displayPanel.getMP3FileNameList();
         System.out.println(tempList.indexOf(currentSong) + ", " + tempList.size());
         if (tempList.indexOf(currentSong) == 0) {
             changeSong(tempList.get(tempList.size() - 1));
@@ -142,16 +142,17 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void changeSelectedSong(SongHolderPanel newSelectedSong) {
-        if (selectedSong != null) {
-            selectedSong.setIsSelected(false);
-            selectedSong = newSelectedSong;
-        } else {
-            selectedSong = newSelectedSong;
-        }
-    }
+    // public void changeSelectedSong(File newSelectedSong) {
+    //     // Might get rid of 
+    //     if (selectedSong != null) {
+    //         selectedSong.setIsSelected(false);
+    //         selectedSong = newSelectedSong;
+    //     } else {
+    //         selectedSong = newSelectedSong;
+    //     }
+    // }
 
-    public SongHolderPanel getCurrentSong() {
+    public File getCurrentSong() {
         return currentSong;
     }
 

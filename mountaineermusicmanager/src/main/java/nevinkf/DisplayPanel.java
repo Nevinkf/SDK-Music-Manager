@@ -3,7 +3,10 @@ package nevinkf;
 import javax.swing.*;
 import java.util.List;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,21 +19,24 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import javazoom.jl.decoder.JavaLayerException;
+
+
 public class DisplayPanel extends JPanel {
 
-    private JPanel columnNamePanel;
-    private List<SongHolderPanel> songHolderList;
+    private String[] columnNameList; //Switch to array later so that more columns can be added or removed
     private JTable songTable;
-    private List<List<Object>> songList; 
+    private List<List<Object>> songList;
+    private List<File> mp3FileNameList;
     private GridBagConstraints displayPanelConstraints;
     private MainFrame mainFrameHolder;
     private SongHolderPanel testHolderPanel;
+    private String songDurationText;
 
     DisplayPanel(MainFrame mainFrame)
             throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         this.setLayout(new BorderLayout());
         mainFrameHolder = mainFrame;
-        songHolderList = new ArrayList<SongHolderPanel>();
 
         displayPanelConstraints = new GridBagConstraints();
 
@@ -38,48 +44,9 @@ public class DisplayPanel extends JPanel {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BorderLayout());
 
-        // Used to keep spacing between labels consistent
-        // JPanel songHolderPanel = new JPanel();
-        // songHolderPanel.setLayout(new BoxLayout(songHolderPanel, BoxLayout.PAGE_AXIS));
-
-        // JPanel columnNamePanel = new JPanel();
-        // columnNamePanel.setLayout(new BoxLayout(columnNamePanel, BoxLayout.LINE_AXIS));
-
-        // JLabel songTitleLabel = new JLabel("Song Title");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel artistLabel = new JLabel("Artist");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel albumLabel = new JLabel("Album");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel trackLabel = new JLabel("Track");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel timeLabel = new JLabel("Time");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel genreLabel = new JLabel("Genre");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-        // JLabel playsLabel = new JLabel("Plays");
-        // songTitleLabel.setHorizontalAlignment(JLabel.LEFT);
-
-
-        // columnNamePanel.add(songTitleLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(artistLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(albumLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(trackLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(timeLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(genreLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-        // columnNamePanel.add(playsLabel);
-        // columnNamePanel.add(Box.createRigidArea(new Dimension(5, 5)));
-
-        // songHolderPanel.add(columnNamePanel);
-
-        Object[] columnNames = {"Song Title", "Artist", "Album", "Track", "Time"};
+        columnNameList = new String[]{"Song Title", "Artist", "Album", "Track", "Time", "Genre"};
         songList = new ArrayList<List<Object>>();
+        mp3FileNameList = new ArrayList<File>();
 
         File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
         // use a jtable
@@ -91,44 +58,69 @@ public class DisplayPanel extends JPanel {
             tempList.add(songTag.getFirst(FieldKey.ARTIST));
             tempList.add(songTag.getFirst(FieldKey.ALBUM));
             tempList.add(songTag.getFirst(FieldKey.TRACK));
+            tempList.add("Placeholder"); // Figure out how to get time later
             tempList.add(songTag.getFirst(FieldKey.GENRE));
 
-            // SongHolderPanel tempSongHolderPanel = new SongHolderPanel();
-            // songHolderList.add(tempSongHolderPanel);
-            // tempSongHolderPanel.setSongTitleLabel(songTag.getFirst(FieldKey.TITLE));
-            // tempSongHolderPanel.setArtistLabel(songTag.getFirst(FieldKey.ARTIST));
-            // tempSongHolderPanel.setAlbumLabel(songTag.getFirst(FieldKey.ALBUM));
-            // tempSongHolderPanel.setTrackLabel(songTag.getFirst(FieldKey.TRACK));
-            // // tempSongHolderPanel.setTimeLabel(songTag.getValue(FieldKey., ABORT); Figure
-            // tempSongHolderPanel.setGenreLabel(songTag.getFirst(FieldKey.GENRE));
-            // tempSongHolderPanel.setSongFileName(song.getName());
-            // tempSongHolderPanel.addMouseListener(new SongHolderMouseListener(tempSongHolderPanel, mainFrameHolder));
-
+            mp3FileNameList.add(song);
             songList.add(tempList);
-            // songHolderPanel.add(tempSongHolderPanel);
-            // songHolderPanel.add(Box.createRigidArea(new Dimension(50, 5)));
         }
 
-        Object[][] songArray = new Object[songList.size()][6];
+        Object[][] songArray = new Object[songList.size()][6]; // make this much better
 
         for (int i = 0; i < songList.size(); i++) {
             List<Object> sublist = songList.get(i);
             songArray[i] = sublist.toArray(new Object[0]);
-            System.out.println(i);
         }
 
-        songTable = new JTable(songArray, columnNames);
+        songTable = new JTable(songArray, columnNameList);
+        songTable.setEnabled(false); // Change to allow for editing of metadata
         songTable.setFillsViewportHeight(true);
         songTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        songTable.addMouseListener(new MouseListener() {
 
-        JScrollPane jTablesScrollPane = new JScrollPane(songTable);
-        westPanel.add(jTablesScrollPane, BorderLayout.WEST);
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO Auto-generated method stub
+                if (e.getClickCount() == 2) {
+                    mainFrameHolder.changeSong(mp3FileNameList.get(songTable.rowAtPoint(e.getPoint())));
+                    try {
+                        mainFrameHolder.playSong();
+                    } catch (FileNotFoundException | JavaLayerException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
 
-        this.add(westPanel, BorderLayout.CENTER);
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+            
+        });
+
+        JScrollPane jTableScrollPane = new JScrollPane(songTable);
+        westPanel.add(jTableScrollPane, BorderLayout.CENTER);
+
+        this.add(westPanel, BorderLayout.WEST);
     }
 
-    public List<SongHolderPanel> getSongHolderList() {
-        return songHolderList;
+    public List<File> getMP3FileNameList() {
+        return mp3FileNameList;
     }
 
 }
