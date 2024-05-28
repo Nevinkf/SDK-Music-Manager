@@ -88,7 +88,6 @@ public class MainFrame extends JFrame {
             songPlayer.stop();
         }
         currentSong = songFile;
-        // String tempFilePath = "mountaineermusicmanager/songs/" + songFile.toURI().toString();
         Media media = new Media(songFile.toURI().toString());
         songPlayer = new MediaPlayer(media);
         songPlayer.setOnReady(() -> {

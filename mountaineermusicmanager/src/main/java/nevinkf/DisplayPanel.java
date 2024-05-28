@@ -24,7 +24,7 @@ import javazoom.jl.decoder.JavaLayerException;
 
 public class DisplayPanel extends JPanel {
 
-    private String[] columnNameList; //Switch to array later so that more columns can be added or removed
+    private String[] columnNameList; //Switch to list later so that more columns can be added or removed
     private JTable songTable;
     private List<List<Object>> songList;
     private List<File> mp3FileNameList;
@@ -48,6 +48,15 @@ public class DisplayPanel extends JPanel {
         songList = new ArrayList<List<Object>>();
         mp3FileNameList = new ArrayList<File>();
 
+        setSongTable();
+
+        JScrollPane jTableScrollPane = new JScrollPane(songTable);
+        westPanel.add(jTableScrollPane, BorderLayout.CENTER);
+
+        this.add(westPanel, BorderLayout.CENTER);
+    }
+
+    public void setSongTable() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
         // use a jtable
         for (File song : songsFolder.listFiles()) {
@@ -113,10 +122,6 @@ public class DisplayPanel extends JPanel {
             
         });
 
-        JScrollPane jTableScrollPane = new JScrollPane(songTable);
-        westPanel.add(jTableScrollPane, BorderLayout.CENTER);
-
-        this.add(westPanel, BorderLayout.WEST);
     }
 
     public List<File> getMP3FileNameList() {
