@@ -19,6 +19,10 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import javazoom.jl.decoder.JavaLayerException;
 
 
@@ -49,6 +53,8 @@ public class DisplayPanel extends JPanel {
         mp3FileNameList = new ArrayList<File>();
 
         setSongTable();
+        writeJsonFile("mountaineermusicmanager/test/songLibary.json");
+        readJsonFile("mountaineermusicmanager/test/songLibary.json");
 
         JScrollPane jTableScrollPane = new JScrollPane(songTable);
         westPanel.add(jTableScrollPane, BorderLayout.CENTER);
@@ -56,9 +62,54 @@ public class DisplayPanel extends JPanel {
         this.add(westPanel, BorderLayout.CENTER);
     }
 
+    public List<Object> readJsonFile(String jsonFilePath) {
+        File songJson = new File(jsonFilePath);
+        // ObjectMapper jsonReader = new ObjectMapper();
+
+        List<Object> testList = new ArrayList<>();
+
+        try {
+            testList = new ObjectMapper().readerFor(ArrayList.class).readValue(songJson);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        System.out.println(testList);
+        return testList;
+
+    }
+
+    public void writeJsonFile(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        File songsFolder = new File("mountaineermusicmanager/songs");
+        List<Object> listToJson = new ArrayList<>();
+
+        for (File song : songsFolder.listFiles()) {
+            AudioFile songFile = AudioFileIO.read(song);
+            Tag songTag = songFile.getTag();
+            List<Object> tempList = new ArrayList<Object>();
+            tempList.add(songTag.getFirst(FieldKey.TITLE));
+            tempList.add(songTag.getFirst(FieldKey.ARTIST));
+            tempList.add(songTag.getFirst(FieldKey.ALBUM));
+            tempList.add(songTag.getFirst(FieldKey.TRACK));
+            tempList.add("Placeholder"); // Figure out how to get time later
+            tempList.add(songTag.getFirst(FieldKey.GENRE));
+
+            listToJson.add(tempList);
+        }
+
+        try {
+            jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new File(jsonFilePath), listToJson);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     public void setSongTable() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
-        // use a jtable
         for (File song : songsFolder.listFiles()) {
             AudioFile songFile = AudioFileIO.read(song);
             Tag songTag = songFile.getTag();
