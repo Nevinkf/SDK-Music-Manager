@@ -52,9 +52,7 @@ public class DisplayPanel extends JPanel {
         songList = new ArrayList<List<Object>>();
         mp3FileNameList = new ArrayList<File>();
 
-        setSongTable();
-        writeJsonFile("mountaineermusicmanager/test/songLibary.json");
-        readJsonFile("mountaineermusicmanager/test/songLibary.json");
+        setSongTable("mountaineermusicmanager/test/songLibary.json");
 
         JScrollPane jTableScrollPane = new JScrollPane(songTable);
         westPanel.add(jTableScrollPane, BorderLayout.CENTER);
@@ -62,66 +60,41 @@ public class DisplayPanel extends JPanel {
         this.add(westPanel, BorderLayout.CENTER);
     }
 
-    public List<Object> readJsonFile(String jsonFilePath) {
-        File songJson = new File(jsonFilePath);
-        // ObjectMapper jsonReader = new ObjectMapper();
+    // public List<Object> readJsonFile(String jsonFilePath) {
+    //     File songJson = new File(jsonFilePath);
+    //     // ObjectMapper jsonReader = new ObjectMapper();
 
-        List<Object> testList = new ArrayList<>();
+    //     List<Object> testList = new ArrayList<>();
 
-        try {
-            testList = new ObjectMapper().readerFor(ArrayList.class).readValue(songJson);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    //     try {
+    //         testList = new ObjectMapper().readerFor(ArrayList.class).readValue(songJson);
+    //     } catch (IOException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
 
-        System.out.println(testList);
-        return testList;
+    //     return testList;
 
-    }
+    // }
 
-    public void writeJsonFile(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        File songsFolder = new File("mountaineermusicmanager/songs");
-        List<Object> listToJson = new ArrayList<>();
+    public void setSongTable(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
+        // File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
+        File jsonSongFile = new File(jsonFilePath);
+        List<List<Object>> jsonSongList = new ArrayList<>();
+        jsonSongList = new ObjectMapper().readerFor(ArrayList.class).readValue(jsonSongFile);
 
-        for (File song : songsFolder.listFiles()) {
-            AudioFile songFile = AudioFileIO.read(song);
+        for (List<Object> song : jsonSongList) {
+            AudioFile songFile = AudioFileIO.read(new File("mountaineermusicmanager/songs/" + song.get(6).toString()));
             Tag songTag = songFile.getTag();
             List<Object> tempList = new ArrayList<Object>();
-            tempList.add(songTag.getFirst(FieldKey.TITLE));
-            tempList.add(songTag.getFirst(FieldKey.ARTIST));
-            tempList.add(songTag.getFirst(FieldKey.ALBUM));
-            tempList.add(songTag.getFirst(FieldKey.TRACK));
-            tempList.add("Placeholder"); // Figure out how to get time later
-            tempList.add(songTag.getFirst(FieldKey.GENRE));
+            tempList.add(song.get(0));
+            tempList.add(song.get(1));
+            tempList.add(song.get(2));
+            tempList.add(song.get(3));
+            tempList.add(song.get(4)); // Figure out how to get time later
+            tempList.add(song.get(5));
 
-            listToJson.add(tempList);
-        }
-
-        try {
-            jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new File(jsonFilePath), listToJson);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public void setSongTable() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
-        File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
-        for (File song : songsFolder.listFiles()) {
-            AudioFile songFile = AudioFileIO.read(song);
-            Tag songTag = songFile.getTag();
-            List<Object> tempList = new ArrayList<Object>();
-            tempList.add(songTag.getFirst(FieldKey.TITLE));
-            tempList.add(songTag.getFirst(FieldKey.ARTIST));
-            tempList.add(songTag.getFirst(FieldKey.ALBUM));
-            tempList.add(songTag.getFirst(FieldKey.TRACK));
-            tempList.add("Placeholder"); // Figure out how to get time later
-            tempList.add(songTag.getFirst(FieldKey.GENRE));
-
-            mp3FileNameList.add(song);
+            mp3FileNameList.add(new File("mountaineermusicmanager/songs/" + song.get(6).toString()));
             songList.add(tempList);
         }
 

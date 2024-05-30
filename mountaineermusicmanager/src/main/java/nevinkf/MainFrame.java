@@ -1,16 +1,25 @@
 package nevinkf;
 
 import javax.swing.*;
+
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +32,7 @@ public class MainFrame extends JFrame {
     private MediaPlayer songPlayer;
     private File selectedSong;
     private File currentSong;
+    private File currentPlayList;
     private DisplayPanel displayPanel;
     private SideBarPanel sideBarPanel;
     private OptionsPanel optionsPanel;
@@ -34,7 +44,13 @@ public class MainFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Mountaineer Music Manager");
 
-        //write the mp3 files to a json file and display that to the 
+        //write the mp3 files to a json file and display that to the
+        
+        if (!new File("mountaineermusicmanager/test/songLibary.json").exists()) {
+            System.out.println("Hello");
+            writeMainJsonFile("mountaineermusicmanager/test/songLibary.json");
+        }
+        currentPlayList = new File("mountaineermusicmanager/test/songLibary.json");
 
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
@@ -54,6 +70,7 @@ public class MainFrame extends JFrame {
         menuBar.add(editMenu);
 
         this.setJMenuBar(menuBar);
+        
 
         JScrollPane sideBarScrollPane = new JScrollPane();
         sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -143,8 +160,33 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void writeMainJsonFile() {
-        
+    public void writeMainJsonFile(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        File songsFolder = new File("mountaineermusicmanager/songs");
+        List<Object> listToJson = new ArrayList<>();
+
+        for (File song : songsFolder.listFiles()) {
+            AudioFile songFile = AudioFileIO.read(song);
+            Tag songTag = songFile.getTag();
+            List<Object> tempList = new ArrayList<Object>();
+            tempList.add(songTag.getFirst(FieldKey.TITLE));
+            tempList.add(songTag.getFirst(FieldKey.ARTIST));
+            tempList.add(songTag.getFirst(FieldKey.ALBUM));
+            tempList.add(songTag.getFirst(FieldKey.TRACK));
+            tempList.add("Placeholder"); // Figure out how to get time later
+            tempList.add(songTag.getFirst(FieldKey.GENRE));
+            tempList.add(song.getName());
+
+            listToJson.add(tempList);
+        }
+
+        try {
+            jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new File(jsonFilePath), listToJson);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // public void changeSelectedSong(File newSelectedSong) {
