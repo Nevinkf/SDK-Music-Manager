@@ -34,6 +34,8 @@ public class MainFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Mountaineer Music Manager");
 
+        //write the mp3 files to a json file and display that to the 
+
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
         sideBarPanel = new SideBarPanel();
@@ -139,6 +141,10 @@ public class MainFrame extends JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void writeMainJsonFile() {
+        
     }
 
     // public void changeSelectedSong(File newSelectedSong) {
