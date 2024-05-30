@@ -120,6 +120,10 @@ public class OptionsPanel extends JPanel {
     }
 
     public void setProgressBarAndEndTime(Duration endTime) {
+        /* Description: Sets the progress bar and end time to the length of the song 
+        *  Arguments: endTime Duration: duration of the song
+        *  Returns: None
+        */
         this.remove(songSlider);
         songSlider = new JSlider(0, (int) Math.round(endTime.toSeconds()), 0);
         songSlider.addChangeListener(new ChangeListener() {
