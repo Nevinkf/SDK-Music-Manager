@@ -1,7 +1,6 @@
 package nevinkf;
 
 import javax.swing.*;
-import java.util.List;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,19 +8,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javazoom.jl.decoder.JavaLayerException;
 
@@ -48,11 +43,13 @@ public class DisplayPanel extends JPanel {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BorderLayout());
 
+        // Allow user to drag and drop a file to add to songs folder, check if mp3 file exists, if so throw error at user, else at it to main song folder and playlist at later date
+
         columnNameList = new String[]{"Song Title", "Artist", "Album", "Track", "Time", "Genre"};
         songList = new ArrayList<List<Object>>();
         mp3FileNameList = new ArrayList<File>();
 
-        setSongTable("mountaineermusicmanager/test/songLibary.json");
+        setSongTable("mountaineermusicmanager/playlists/songLibary.json");
 
         JScrollPane jTableScrollPane = new JScrollPane(songTable);
         westPanel.add(jTableScrollPane, BorderLayout.CENTER);
@@ -60,45 +57,25 @@ public class DisplayPanel extends JPanel {
         this.add(westPanel, BorderLayout.CENTER);
     }
 
-    // public List<Object> readJsonFile(String jsonFilePath) {
-    //     File songJson = new File(jsonFilePath);
-    //     // ObjectMapper jsonReader = new ObjectMapper();
-
-    //     List<Object> testList = new ArrayList<>();
-
-    //     try {
-    //         testList = new ObjectMapper().readerFor(ArrayList.class).readValue(songJson);
-    //     } catch (IOException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
-
-    //     return testList;
-
-    // }
-
     public void setSongTable(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
-        // File songsFolder = new File("mountaineermusicmanager/songs"); // TODO make this able to be changed by user at a
         File jsonSongFile = new File(jsonFilePath);
-        List<List<Object>> jsonSongList = new ArrayList<>();
+        List<HashMap<String, String>> jsonSongList = new ArrayList<>();
         jsonSongList = new ObjectMapper().readerFor(ArrayList.class).readValue(jsonSongFile);
 
-        for (List<Object> song : jsonSongList) {
-            AudioFile songFile = AudioFileIO.read(new File("mountaineermusicmanager/songs/" + song.get(6).toString()));
-            Tag songTag = songFile.getTag();
+        for (HashMap<String, String> song : jsonSongList) {
             List<Object> tempList = new ArrayList<Object>();
-            tempList.add(song.get(0));
-            tempList.add(song.get(1));
-            tempList.add(song.get(2));
-            tempList.add(song.get(3));
-            tempList.add(song.get(4)); // Figure out how to get time later
-            tempList.add(song.get(5));
+            tempList.add(song.get("Title"));
+            tempList.add(song.get("Artist"));
+            tempList.add(song.get("Album"));
+            tempList.add(song.get("Track"));
+            tempList.add(song.get("Time")); // Figure out how to get time later TIME
+            tempList.add(song.get("Genre"));
 
-            mp3FileNameList.add(new File("mountaineermusicmanager/songs/" + song.get(6).toString()));
+            mp3FileNameList.add(new File("mountaineermusicmanager/songs/" + song.get("MP3File").toString()));
             songList.add(tempList);
         }
 
-        Object[][] songArray = new Object[songList.size()][6]; // make this much better
+        Object[][] songArray = new Object[songList.size()][6]; // make the column amount adjustable
 
         for (int i = 0; i < songList.size(); i++) {
             List<Object> sublist = songList.get(i);
@@ -145,7 +122,6 @@ public class DisplayPanel extends JPanel {
             }
             
         });
-
     }
 
     public List<File> getMP3FileNameList() {

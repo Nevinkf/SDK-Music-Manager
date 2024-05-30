@@ -21,6 +21,7 @@ import javafx.scene.media.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,11 +47,10 @@ public class MainFrame extends JFrame {
 
         //write the mp3 files to a json file and display that to the
         
-        if (!new File("mountaineermusicmanager/test/songLibary.json").exists()) {
-            System.out.println("Hello");
-            writeMainJsonFile("mountaineermusicmanager/test/songLibary.json");
+        if (!new File("mountaineermusicmanager/playlists/songLibary.json").exists()) {
+            writeMainJsonFile("mountaineermusicmanager/playlists/songLibary.json");
         }
-        currentPlayList = new File("mountaineermusicmanager/test/songLibary.json");
+        currentPlayList = new File("mountaineermusicmanager/playlists/songLibary.json");
 
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
@@ -163,19 +163,19 @@ public class MainFrame extends JFrame {
     public void writeMainJsonFile(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         ObjectMapper jsonMapper = new ObjectMapper();
         File songsFolder = new File("mountaineermusicmanager/songs");
-        List<Object> listToJson = new ArrayList<>();
+        List<HashMap<String, String>> listToJson = new ArrayList<>();
 
         for (File song : songsFolder.listFiles()) {
             AudioFile songFile = AudioFileIO.read(song);
             Tag songTag = songFile.getTag();
-            List<Object> tempList = new ArrayList<Object>();
-            tempList.add(songTag.getFirst(FieldKey.TITLE));
-            tempList.add(songTag.getFirst(FieldKey.ARTIST));
-            tempList.add(songTag.getFirst(FieldKey.ALBUM));
-            tempList.add(songTag.getFirst(FieldKey.TRACK));
-            tempList.add("Placeholder"); // Figure out how to get time later
-            tempList.add(songTag.getFirst(FieldKey.GENRE));
-            tempList.add(song.getName());
+            HashMap<String, String> tempList = new HashMap<String, String>();
+            tempList.put("Title", songTag.getFirst(FieldKey.TITLE));
+            tempList.put("Artist", songTag.getFirst(FieldKey.ARTIST));
+            tempList.put("Album", songTag.getFirst(FieldKey.ALBUM));
+            tempList.put("Track", songTag.getFirst(FieldKey.TRACK));
+            tempList.put("Time", "Placeholder"); // Figure out how to get time later
+            tempList.put("Genre", songTag.getFirst(FieldKey.GENRE));
+            tempList.put("MP3File", song.getName());
 
             listToJson.add(tempList);
         }

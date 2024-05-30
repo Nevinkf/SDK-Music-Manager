@@ -2,21 +2,23 @@ package nevinkf;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class SideBarPanel extends JPanel {
 
-    JLabel testLabel;
-    GridBagConstraints sideBarConstraints;
+    private JLabel testLabel;
+    private GridBagConstraints sideBarConstraints;
 
     SideBarPanel() {
         this.setLayout(new BorderLayout());
 
         sideBarConstraints = new GridBagConstraints();
-        JLabel[] testLabels = { new JLabel("Hello"), new JLabel("C#"), new JLabel("Unity"), new JLabel("GDScript"),
-                new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"), new JLabel("Heart"),
-                new JLabel("Heart") };
+        List<JLabel> testLabels = new ArrayList<JLabel>();
 
         testLabel = new JLabel("Test Playlist");
+
+        // Allow user to create
 
         // Used to keep components to the left of the side bar
         JPanel westPanel = new JPanel();
@@ -26,7 +28,7 @@ public class SideBarPanel extends JPanel {
         JPanel gridBagPanel = new JPanel();
         gridBagPanel.setLayout(new GridBagLayout());
 
-        for (int i = 0; i < testLabels.length; i++) {
+        for (int i = 0; i < testLabels.size(); i++) {
             sideBarConstraints.gridx = 0;
             sideBarConstraints.gridy = i;
             sideBarConstraints.gridheight = 1;
@@ -36,7 +38,7 @@ public class SideBarPanel extends JPanel {
             sideBarConstraints.anchor = GridBagConstraints.WEST;
             sideBarConstraints.insets = new Insets(2, 2, 2, 2);
             sideBarConstraints.fill = GridBagConstraints.NONE;
-            gridBagPanel.add(testLabels[i], sideBarConstraints);
+            gridBagPanel.add(testLabels.get(i), sideBarConstraints);
         }
 
         westPanel.add(gridBagPanel, BorderLayout.WEST);
