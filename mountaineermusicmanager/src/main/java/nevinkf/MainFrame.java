@@ -11,6 +11,8 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -51,6 +53,7 @@ public class MainFrame extends JFrame {
             writeMainJsonFile("mountaineermusicmanager/playlists/songLibary.json");
         }
         currentPlayList = new File("mountaineermusicmanager/playlists/songLibary.json");
+        updateJsonFile("mountaineermusicmanager/playlists/songLibary.json");
 
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
         displayPanel = new DisplayPanel(this);
@@ -168,16 +171,16 @@ public class MainFrame extends JFrame {
         for (File song : songsFolder.listFiles()) {
             AudioFile songFile = AudioFileIO.read(song);
             Tag songTag = songFile.getTag();
-            HashMap<String, String> tempList = new HashMap<String, String>();
-            tempList.put("Title", songTag.getFirst(FieldKey.TITLE));
-            tempList.put("Artist", songTag.getFirst(FieldKey.ARTIST));
-            tempList.put("Album", songTag.getFirst(FieldKey.ALBUM));
-            tempList.put("Track", songTag.getFirst(FieldKey.TRACK));
-            tempList.put("Time", "Placeholder"); // Figure out how to get time later
-            tempList.put("Genre", songTag.getFirst(FieldKey.GENRE));
-            tempList.put("MP3File", song.getName());
+            HashMap<String, String> tempHashMap = new HashMap<String, String>();
+            tempHashMap.put("Title", songTag.getFirst(FieldKey.TITLE));
+            tempHashMap.put("Artist", songTag.getFirst(FieldKey.ARTIST));
+            tempHashMap.put("Album", songTag.getFirst(FieldKey.ALBUM));
+            tempHashMap.put("Track", songTag.getFirst(FieldKey.TRACK));
+            tempHashMap.put("Time", "Placeholder"); // Figure out how to get time later
+            tempHashMap.put("Genre", songTag.getFirst(FieldKey.GENRE));
+            tempHashMap.put("MP3File", song.getName());
 
-            listToJson.add(tempList);
+            listToJson.add(tempHashMap);
         }
 
         try {
@@ -189,12 +192,51 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void updateMainJsonFile(String jsonFilePath) {
+    public void updateJsonFile(String jsonFilePath) {
         // Grab the json file, put it's values into a hashmap,
+        ObjectMapper jsonMapper = new ObjectMapper();
+        File jsonFile = new File(jsonFilePath);
+        List<HashMap<String, String>> jsonToList = new ArrayList<HashMap<String, String>>();
+
+        try {
+            jsonToList = jsonMapper.readValue(new File(jsonFilePath), new TypeReference<ArrayList<HashMap<String, String>>>() {});
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     public void addToJsonFile(String jsonFilePath){
+
+    }
+
+    public void removeFromJsonFile(String jsonFilePath, int positionInJsonFile){
+        ObjectMapper jsonMapper = new ObjectMapper();
+        File jsonFile = new File(jsonFilePath);
+        List<HashMap<String, String>> jsonToList = new ArrayList<HashMap<String, String>>();
         
+        try {
+            jsonToList = jsonMapper.readValue(new File(jsonFilePath), new TypeReference<ArrayList<HashMap<String, String>>>() {});
+            System.out.println(jsonToList.get(positionInJsonFile));
+            File toDeleteFile = new File("mountaineermusicmanager/songs/" + jsonToList.get(positionInJsonFile).get("MP3File"));
+            jsonToList.remove(positionInJsonFile);
+            System.out.println(toDeleteFile.getAbsolutePath());
+            new File(toDeleteFile.getAbsolutePath()).delete();
+            
+            jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new File(jsonFilePath), jsonToList);
+
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     // public void changeSelectedSong(File newSelectedSong) {

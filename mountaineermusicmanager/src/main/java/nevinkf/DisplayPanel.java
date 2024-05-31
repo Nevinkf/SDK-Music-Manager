@@ -180,7 +180,17 @@ public class DisplayPanel extends JPanel {
                         e1.printStackTrace();
                     }
                 } else if (e.getButton() == e.BUTTON3) {
-                    songTablePopupMenu.show(jTableScrollPane,  e.getX(), e.getY());
+                    mainFrameHolder.removeFromJsonFile(jsonFilePath, songTable.rowAtPoint(e.getPoint()));
+
+                    try {
+                        setSongTable("mountaineermusicmanager/playlists/songLibary.json");
+                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException
+                            | InvalidAudioFrameException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+
+                    // songTablePopupMenu.show(jTableScrollPane, e.getX(), e.getY());
                 }
             }
 
