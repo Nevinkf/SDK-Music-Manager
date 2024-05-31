@@ -45,8 +45,8 @@ public class MainFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Mountaineer Music Manager");
 
-        //write the mp3 files to a json file and display that to the
-        
+        // write the mp3 files to a json file and display that to the
+
         if (!new File("mountaineermusicmanager/playlists/songLibary.json").exists()) {
             writeMainJsonFile("mountaineermusicmanager/playlists/songLibary.json");
         }
@@ -70,7 +70,6 @@ public class MainFrame extends JFrame {
         menuBar.add(editMenu);
 
         this.setJMenuBar(menuBar);
-        
 
         JScrollPane sideBarScrollPane = new JScrollPane();
         sideBarScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -160,7 +159,8 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void writeMainJsonFile(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+    public void writeMainJsonFile(String jsonFilePath)
+            throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         ObjectMapper jsonMapper = new ObjectMapper();
         File songsFolder = new File("mountaineermusicmanager/songs");
         List<HashMap<String, String>> listToJson = new ArrayList<>();
@@ -189,14 +189,22 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void updateMainJsonFile(String jsonFilePath) {
+        // Grab the json file, put it's values into a hashmap,
+    }
+
+    public void addToJsonFile(String jsonFilePath){
+        
+    }
+
     // public void changeSelectedSong(File newSelectedSong) {
-    //     // Might get rid of 
-    //     if (selectedSong != null) {
-    //         selectedSong.setIsSelected(false);
-    //         selectedSong = newSelectedSong;
-    //     } else {
-    //         selectedSong = newSelectedSong;
-    //     }
+    // // Might get rid of
+    // if (selectedSong != null) {
+    // selectedSong.setIsSelected(false);
+    // selectedSong = newSelectedSong;
+    // } else {
+    // selectedSong = newSelectedSong;
+    // }
     // }
 
     public File getCurrentSong() {

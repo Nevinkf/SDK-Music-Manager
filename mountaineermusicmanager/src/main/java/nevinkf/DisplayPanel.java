@@ -2,11 +2,12 @@ package nevinkf;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.datatransfer.*;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -25,6 +26,9 @@ public class DisplayPanel extends JPanel {
 
     private String[] columnNameList; //Switch to list later so that more columns can be added or removed
     private JTable songTable;
+    private JScrollPane jTableScrollPane;
+    private JPanel westPanel;
+    private JPopupMenu songTablePopupMenu;
     private List<List<Object>> songList;
     private List<File> mp3FileNameList;
     private GridBagConstraints displayPanelConstraints;
@@ -40,8 +44,12 @@ public class DisplayPanel extends JPanel {
         displayPanelConstraints = new GridBagConstraints();
 
         // Used to keep components to the left of the side bar
-        JPanel westPanel = new JPanel();
+        westPanel = new JPanel();
+        jTableScrollPane = new JScrollPane();
         westPanel.setLayout(new BorderLayout());
+        songTablePopupMenu = new JPopupMenu();
+        songTablePopupMenu.add("Delete Song");
+
 
         // Allow user to drag and drop a file to add to songs folder, check if mp3 file exists, if so throw error at user, else at it to main song folder and playlist at later date
 
@@ -51,16 +59,82 @@ public class DisplayPanel extends JPanel {
 
         setSongTable("mountaineermusicmanager/playlists/songLibary.json");
 
-        JScrollPane jTableScrollPane = new JScrollPane(songTable);
         westPanel.add(jTableScrollPane, BorderLayout.CENTER);
+        
+        this.setDropTarget(new DropTarget(this, new DropTargetListener() {
+
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent dtde) {
+                // TODO Auto-generated method stub
+                dtde.acceptDrop(DnDConstants.ACTION_COPY);
+
+                Transferable transferable = dtde.getTransferable();
+                DataFlavor[] testDataFlavors = transferable.getTransferDataFlavors();
+
+                System.out.println(testDataFlavors);
+
+                for (DataFlavor flavor : testDataFlavors) {
+                    try {
+                        // If the drop data is a list of files
+                        if (flavor.isFlavorJavaFileListType()) {
+                            List<File> files = (List<File>) transferable.getTransferData(flavor);
+                            for (File file : files) {
+                                InputStream inputStream = new FileInputStream(file);
+                                OutputStream outputStream = new FileOutputStream("mountaineermusicmanager/songs/" + file.getName());
+                                
+                                byte[] buffer = new byte[1024];
+                                int bytesRead;
+                                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                    outputStream.write(buffer, 0, bytesRead);
+                                }
+
+                                inputStream.close();
+                                outputStream.close();
+
+                                mainFrame.writeMainJsonFile("mountaineermusicmanager/playlists/songLibary.json");
+                                setSongTable("mountaineermusicmanager/playlists/songLibary.json");
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+            
+        }));
 
         this.add(westPanel, BorderLayout.CENTER);
+
     }
 
     public void setSongTable(String jsonFilePath) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException{
         File jsonSongFile = new File(jsonFilePath);
         List<HashMap<String, String>> jsonSongList = new ArrayList<>();
         jsonSongList = new ObjectMapper().readerFor(ArrayList.class).readValue(jsonSongFile);
+
+        songList.clear();
+        mp3FileNameList.clear();
 
         for (HashMap<String, String> song : jsonSongList) {
             List<Object> tempList = new ArrayList<Object>();
@@ -82,6 +156,13 @@ public class DisplayPanel extends JPanel {
             songArray[i] = sublist.toArray(new Object[0]);
         }
 
+        if (songTable != null) {
+            songTable.setEnabled(true);
+            westPanel.remove(jTableScrollPane);
+            jTableScrollPane.remove(songTable);
+        }
+        
+
         songTable = new JTable(songArray, columnNameList);
         songTable.setEnabled(false); // Change to allow for editing of metadata
         songTable.setFillsViewportHeight(true);
@@ -98,6 +179,8 @@ public class DisplayPanel extends JPanel {
                     } catch (FileNotFoundException | JavaLayerException e1) {
                         e1.printStackTrace();
                     }
+                } else if (e.getButton() == e.BUTTON3) {
+                    songTablePopupMenu.show(jTableScrollPane,  e.getX(), e.getY());
                 }
             }
 
@@ -122,6 +205,16 @@ public class DisplayPanel extends JPanel {
             }
             
         });
+       
+        jTableScrollPane = new JScrollPane(songTable);
+        jTableScrollPane.setViewportView(songTable);
+        jTableScrollPane.repaint();
+        jTableScrollPane.revalidate();
+
+        westPanel.add(jTableScrollPane);
+        westPanel.repaint();
+        westPanel.revalidate();
+
     }
 
     public List<File> getMP3FileNameList() {
