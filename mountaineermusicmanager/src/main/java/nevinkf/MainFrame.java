@@ -35,7 +35,7 @@ public class MainFrame extends JFrame {
     private MediaPlayer songPlayer;
     private File selectedSong;
     private File currentSong;
-    private File currentPlayList;
+    private String currentPlayList;
     private DisplayPanel displayPanel;
     private SideBarPanel sideBarPanel;
     private OptionsPanel optionsPanel;
@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
         if (!new File("mountaineermusicmanager/playlists/songLibary.json").exists()) {
             writeMainJsonFile("mountaineermusicmanager/playlists/songLibary.json");
         }
-        currentPlayList = new File("mountaineermusicmanager/playlists/songLibary.json");
+        currentPlayList = "mountaineermusicmanager/playlists/songLibary.json";
         updateJsonFile("mountaineermusicmanager/playlists/songLibary.json");
 
         JFXPanel jfxPanel = new JFXPanel(); // Used here to initialize toolkit for jfx media player
@@ -220,15 +220,13 @@ public class MainFrame extends JFrame {
         List<HashMap<String, String>> jsonToList = new ArrayList<HashMap<String, String>>();
         
         try {
-            jsonToList = jsonMapper.readValue(new File(jsonFilePath), new TypeReference<ArrayList<HashMap<String, String>>>() {});
-            System.out.println(jsonToList.get(positionInJsonFile));
+            jsonToList = jsonMapper.readValue(jsonFile, new TypeReference<ArrayList<HashMap<String, String>>>() {});
             File toDeleteFile = new File("mountaineermusicmanager/songs/" + jsonToList.get(positionInJsonFile).get("MP3File"));
             jsonToList.remove(positionInJsonFile);
-            System.out.println(toDeleteFile.getAbsolutePath());
             new File(toDeleteFile.getAbsolutePath()).delete();
             
             jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(new File(jsonFilePath), jsonToList);
+            jsonMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, jsonToList);
 
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
@@ -253,10 +251,14 @@ public class MainFrame extends JFrame {
         return currentSong;
     }
 
+    public String getCurrentPlaylist() {
+        return currentPlayList;
+    }
+
     public MediaPlayer getMediaPlayer() {
         return songPlayer;
     }
-
+    
     public void setSongVolume(double newSongVolume) {
         songPlayer.setVolume(newSongVolume);
     }

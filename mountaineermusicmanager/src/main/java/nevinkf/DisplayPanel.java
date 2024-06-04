@@ -3,6 +3,8 @@ package nevinkf;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.dnd.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.datatransfer.*;
@@ -48,7 +50,27 @@ public class DisplayPanel extends JPanel {
         jTableScrollPane = new JScrollPane();
         westPanel.setLayout(new BorderLayout());
         songTablePopupMenu = new JPopupMenu();
-        songTablePopupMenu.add("Delete Song");
+
+        JMenuItem deleteSongItem = new JMenuItem("Delete Song");
+        songTablePopupMenu.add(deleteSongItem);
+
+        deleteSongItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub 
+                // Fix glitch that it does not delete while playing
+                mainFrameHolder.removeFromJsonFile(mainFrameHolder.getCurrentPlaylist(), songTable.getSelectedRow()); 
+                try {
+                    setSongTable(mainFrameHolder.getCurrentPlaylist());
+                } catch (CannotReadException | IOException | TagException | ReadOnlyFileException
+                        | InvalidAudioFrameException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+            
+        });
 
 
         // Allow user to drag and drop a file to add to songs folder, check if mp3 file exists, if so throw error at user, else at it to main song folder and playlist at later date
@@ -164,7 +186,8 @@ public class DisplayPanel extends JPanel {
         
 
         songTable = new JTable(songArray, columnNameList);
-        songTable.setEnabled(false); // Change to allow for editing of metadata
+        songTable.setRowSelectionAllowed(true);
+        songTable.setDefaultEditor(Object.class, null); // Change to allow for editing of metadata
         songTable.setFillsViewportHeight(true);
         songTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         songTable.addMouseListener(new MouseListener() {
@@ -172,6 +195,14 @@ public class DisplayPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // TODO Auto-generated method stub
+
+                int r = songTable.rowAtPoint(e.getPoint());
+                if (r >= 0 && r < songTable.getRowCount()) {
+                    songTable.setRowSelectionInterval(r, r);
+                } else {
+                    songTable.clearSelection();
+                }
+
                 if (e.getClickCount() == 2) {
                     mainFrameHolder.changeSong(mp3FileNameList.get(songTable.rowAtPoint(e.getPoint())));
                     try {
@@ -180,17 +211,7 @@ public class DisplayPanel extends JPanel {
                         e1.printStackTrace();
                     }
                 } else if (e.getButton() == e.BUTTON3) {
-                    mainFrameHolder.removeFromJsonFile(jsonFilePath, songTable.rowAtPoint(e.getPoint()));
-
-                    try {
-                        setSongTable("mountaineermusicmanager/playlists/songLibary.json");
-                    } catch (CannotReadException | IOException | TagException | ReadOnlyFileException
-                            | InvalidAudioFrameException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-
-                    // songTablePopupMenu.show(jTableScrollPane, e.getX(), e.getY());
+                    songTablePopupMenu.show(jTableScrollPane, e.getX(), e.getY());
                 }
             }
 
