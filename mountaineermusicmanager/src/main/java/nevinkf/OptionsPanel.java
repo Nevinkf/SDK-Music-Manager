@@ -50,8 +50,6 @@ public class OptionsPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                // if song is playing, pause song, else play/resume song
                 if (mainFrameHolder.isSongPaused() == false) {
                     mainFrameHolder.pauseSong();
                 } else {

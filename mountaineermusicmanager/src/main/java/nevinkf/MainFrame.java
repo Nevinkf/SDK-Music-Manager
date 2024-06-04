@@ -33,7 +33,6 @@ public class MainFrame extends JFrame {
     private JMenuBar menuBar;
     private BorderLayout mainFrameLayout;
     private MediaPlayer songPlayer;
-    private File selectedSong;
     private File currentSong;
     private String currentPlayList;
     private DisplayPanel displayPanel;
@@ -126,6 +125,15 @@ public class MainFrame extends JFrame {
         });
     }
 
+    public void deleteMediaPlayer() {
+        if (songPlayer != null){
+            songPlayer.stop();
+            songPlayer.dispose();
+            System.gc(); // Runs garbage collector to ensure media player gets rid of refernce to mp3 file
+            songPlayer = null; 
+        }
+    }
+
     public void changeToNextSong() {
         // take position of current song in list
         List<File> tempList = displayPanel.getMP3FileNameList();
@@ -214,7 +222,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    public void removeFromJsonFile(String jsonFilePath, int positionInJsonFile){
+    public void removeFromJsonFile(String jsonFilePath, int positionInJsonFile) {
         ObjectMapper jsonMapper = new ObjectMapper();
         File jsonFile = new File(jsonFilePath);
         List<HashMap<String, String>> jsonToList = new ArrayList<HashMap<String, String>>();
@@ -223,8 +231,13 @@ public class MainFrame extends JFrame {
             jsonToList = jsonMapper.readValue(jsonFile, new TypeReference<ArrayList<HashMap<String, String>>>() {});
             File toDeleteFile = new File("mountaineermusicmanager/songs/" + jsonToList.get(positionInJsonFile).get("MP3File"));
             jsonToList.remove(positionInJsonFile);
-            new File(toDeleteFile.getAbsolutePath()).delete();
             
+            if (new File(toDeleteFile.getAbsolutePath()).delete()) {
+                System.out.println("Success");
+            } else {
+                System.out.println("Failure");
+            }
+
             jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
             jsonMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, jsonToList);
 
@@ -236,16 +249,6 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
-    // public void changeSelectedSong(File newSelectedSong) {
-    // // Might get rid of
-    // if (selectedSong != null) {
-    // selectedSong.setIsSelected(false);
-    // selectedSong = newSelectedSong;
-    // } else {
-    // selectedSong = newSelectedSong;
-    // }
-    // }
 
     public File getCurrentSong() {
         return currentSong;

@@ -21,6 +21,7 @@ import org.jaudiotagger.tag.TagException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.scene.media.MediaPlayer.Status;
 import javazoom.jl.decoder.JavaLayerException;
 
 
@@ -59,7 +60,13 @@ public class DisplayPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub 
-                // Fix glitch that it does not delete while playing
+                // Fix glitch that song does not delete while playing
+                if (mainFrameHolder.getMediaPlayer() != null) {
+                    if (mainFrameHolder.getMediaPlayer().getStatus() == Status.PAUSED || mainFrameHolder.getMediaPlayer().getStatus() == Status.PLAYING) {
+                        mainFrameHolder.deleteMediaPlayer();
+                    }
+                }
+
                 mainFrameHolder.removeFromJsonFile(mainFrameHolder.getCurrentPlaylist(), songTable.getSelectedRow()); 
                 try {
                     setSongTable(mainFrameHolder.getCurrentPlaylist());
@@ -69,7 +76,6 @@ public class DisplayPanel extends JPanel {
                     e1.printStackTrace();
                 }
             }
-            
         });
 
 
