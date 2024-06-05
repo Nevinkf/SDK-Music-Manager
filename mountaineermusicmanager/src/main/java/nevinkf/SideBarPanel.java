@@ -8,17 +8,17 @@ import java.util.ArrayList;
 public class SideBarPanel extends JPanel {
 
     private JLabel testLabel;
+    private List<JLabel> testLabels;
     private GridBagConstraints sideBarConstraints;
 
     SideBarPanel() {
         this.setLayout(new BorderLayout());
 
         sideBarConstraints = new GridBagConstraints();
-        List<JLabel> testLabels = new ArrayList<JLabel>();
-
+        testLabels = new ArrayList<JLabel>();
         testLabel = new JLabel("Test Playlist");
 
-        // Allow user to create
+        // Have a list of playlists titles, each tilte holds a path to the json file that stores it's songs
 
         // Used to keep components to the left of the side bar
         JPanel westPanel = new JPanel();

@@ -34,9 +34,8 @@ public class DisplayPanel extends JPanel {
     private JPopupMenu songTablePopupMenu;
     private List<List<Object>> songList;
     private List<File> mp3FileNameList;
-    private GridBagConstraints displayPanelConstraints;
+    private GridBagConstraints displayPanelConstraints; // Use later when redesinging gui
     private MainFrame mainFrameHolder;
-    private SongHolderPanel testHolderPanel;
     private String songDurationText;
 
     DisplayPanel(MainFrame mainFrame)
