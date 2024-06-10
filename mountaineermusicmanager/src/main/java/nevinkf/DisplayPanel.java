@@ -77,7 +77,6 @@ public class DisplayPanel extends JPanel {
             }
         });
 
-
         // Allow user to drag and drop a file to add to songs folder, check if mp3 file exists, if so throw error at user, else at it to main song folder and playlist at later date
 
         columnNameList = new String[]{"Song Title", "Artist", "Album", "Track", "Time", "Genre"};
