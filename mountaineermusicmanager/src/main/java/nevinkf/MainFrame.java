@@ -223,6 +223,12 @@ public class MainFrame extends JFrame {
     }
 
     public void removeFromJsonFile(String jsonFilePath, int positionInJsonFile) {
+        /*  
+         * Description: Removes a song entry in the JSON file by taking the file and putting it into a list of hashmaps, then rebuilds the JSON file.
+         * Arguements: jsonFilePath String: File path to the json file with a string
+         *             positionInJsonFile int: Position of the song in the JSON File
+         *             Returns: None
+         */
         ObjectMapper jsonMapper = new ObjectMapper();
         File jsonFile = new File(jsonFilePath);
         List<HashMap<String, String>> jsonToList = new ArrayList<HashMap<String, String>>();
